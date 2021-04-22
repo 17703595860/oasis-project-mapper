@@ -89,6 +89,7 @@ public class PageModule {
     String bmName = "TZClass";
 
     String detailComponentId = "534420627126358027";
+    String listComponentId = "534420627126358026";
 
     String listDispId = "cmsDispFrame000002";
     String detailDispId = "cmsDispFrame000001";
@@ -149,6 +150,11 @@ public class PageModule {
       if (StringUtils.isNotBlank(detailComponentId)) {
         TzComponent tzComponent = tzComponentMapper.selectByPrimaryKey(detailComponentId);
         tzComponent.setPageId(tzPageDetail.getId());
+        tzComponentMapper.updateByPrimaryKeySelective(tzComponent);
+      }
+      if (StringUtils.isNotBlank(listComponentId)) {
+        TzComponent tzComponent = tzComponentMapper.selectByPrimaryKey(listComponentId);
+        tzComponent.setPageId(tzPageList.getId());
         tzComponentMapper.updateByPrimaryKeySelective(tzComponent);
       }
 

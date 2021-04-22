@@ -1,9 +1,14 @@
 package com.study.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 import javax.persistence.*;
 
 @Table(name = "TZ_LINK")
+@NoArgsConstructor
+@AllArgsConstructor
 public class TzLink {
     @Id
     @Column(name = "ID")

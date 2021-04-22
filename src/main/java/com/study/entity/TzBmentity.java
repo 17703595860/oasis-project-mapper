@@ -1,5 +1,8 @@
 package com.study.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -7,6 +10,8 @@ import javax.persistence.Table;
 import java.util.Date;
 
 @Table(name = "TZ_BMENTITY")
+@NoArgsConstructor
+@AllArgsConstructor
 public class TzBmentity {
     @Id
     @Column(name = "ID")

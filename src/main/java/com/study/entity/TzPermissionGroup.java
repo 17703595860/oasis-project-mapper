@@ -1,9 +1,14 @@
 package com.study.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 import javax.persistence.*;
 
 @Table(name = "TZ_PERMISSION_GROUP")
+@NoArgsConstructor
+@AllArgsConstructor
 public class TzPermissionGroup {
     @Id
     @Column(name = "ID")

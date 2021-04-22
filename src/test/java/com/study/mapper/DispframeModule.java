@@ -44,6 +44,7 @@ public class DispframeModule {
 
 
     String admin = "ADMIN0000000000001";
+    Date date = new Date();
     Integer idNum = 18;
 
     private String dispFrameIdpre = "cmsDispFrame000";
@@ -68,7 +69,6 @@ public class DispframeModule {
         boolean search = true;
         boolean del = true;
 
-        Date date = new Date();
 
         DefaultTransactionDefinition def = new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED);
         def.setName("copyFieldToDisplayFrame");
@@ -184,8 +184,6 @@ public class DispframeModule {
         String beName = "TZClass";
         String dispFrameId = null;
 
-        Date date = new Date();
-
         DefaultTransactionDefinition def = new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED);
         def.setName("copyFieldToDisplayFrame");
         TransactionStatus status = transactionManager.getTransaction(def);
@@ -253,7 +251,6 @@ public class DispframeModule {
      * @param type
      */
     private void copyFieldElement(String dispFrameId, String beId, String beName, String type) {
-        Date date = new Date();
 
         List<TzField> fieldList = tzFieldMapper.select(new TzField() {{
             setBusentityId(beId);

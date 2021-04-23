@@ -13,6 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.util.CollectionUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import java.text.NumberFormat;
 import java.util.Date;
@@ -41,6 +43,12 @@ public class DispframeModule {
     private TzDispframeFlddrilldownMapper tzDispframeFlddrilldownMapper;
     @Autowired
     private DataSourceTransactionManager transactionManager;
+    @Autowired
+    private TzFilterDfnMapper tzFilterDfnMapper;
+    @Autowired
+    private TzJoinMapper tzJoinMapper;
+    @Autowired
+    private TzJoinSpecMapper tzJoinSpecMapper;
 
 
     String admin = "ADMIN0000000000001";
@@ -60,10 +68,13 @@ public class DispframeModule {
      */
     @Test
     public void copyDisplayFrameAllByBeName() {
-        String beName = "TZClass";
+        String beName = "TZStudent";
         String datasetFlg = "Admin";
-        String DetailComponentId = "534420627126358027";
-        String filterId = "151502154956802";
+        String filterName = "StudentFilter";
+
+        boolean jumpFlag = true;
+        String DetailComponentId = "534420627126358025";
+
         boolean add = true;
         boolean edit = true;
         boolean search = true;
@@ -101,21 +112,24 @@ public class DispframeModule {
                 throw new RuntimeException("展示框架" + "List" + datasetFlg +"插入失败");
             }
             copyFieldElement(dispFrameListId, beId, tzBusentity.getName(), "List");
-            // 配置字段跳转
-            TzDispframeElement NameDispElement = tzDispframeElementMapper.selectOne(new TzDispframeElement() {{
-                setDispframeId(tzDispframeList.getId());
-                setName("Name");
-            }});
-            TzField idField = tzFieldMapper.selectOne(new TzField() {{
-                setBusentityId(beId);
-                setName("Id");
-            }});
-            NameDispElement.setFldDrilldown("Y");
-            NameDispElement.setDrilldownSourceId(idField.getId());
-            tzDispframeElementMapper.updateByPrimaryKeySelective(NameDispElement);
-            // 配置跳转
-            TzDispframeFlddrilldown tzDispframeFlddrilldown = new TzDispframeFlddrilldown(nextDispFrameFldJumpId(), NameDispElement.getId(), 1L, null, DetailComponentId, null, null, 1, admin, date, admin, date);
-            tzDispframeFlddrilldownMapper.insertSelective(tzDispframeFlddrilldown);
+
+            if (jumpFlag) {
+                // 配置字段跳转
+                TzDispframeElement NameDispElement = tzDispframeElementMapper.selectOne(new TzDispframeElement() {{
+                    setDispframeId(tzDispframeList.getId());
+                    setName("Name");
+                }});
+                TzField idField = tzFieldMapper.selectOne(new TzField() {{
+                    setBusentityId(beId);
+                    setName("Id");
+                }});
+                NameDispElement.setFldDrilldown("Y");
+                NameDispElement.setDrilldownSourceId(idField.getId());
+                tzDispframeElementMapper.updateByPrimaryKeySelective(NameDispElement);
+                // 配置跳转
+                TzDispframeFlddrilldown tzDispframeFlddrilldown = new TzDispframeFlddrilldown(nextDispFrameFldJumpId(), NameDispElement.getId(), 1L, null, DetailComponentId, null, null, 1, admin, date, admin, date);
+                tzDispframeFlddrilldownMapper.insertSelective(tzDispframeFlddrilldown);
+            }
 
             // 配置list按钮元素
             if (add) {
@@ -149,6 +163,12 @@ public class DispframeModule {
                 tzDispframeElementMapper.insertSelective(tzDispframeElementButton);
             }
             if (search) {
+
+                TzFilterDfn tzFilterDfn = tzFilterDfnMapper.selectOne(new TzFilterDfn() {{
+                    setName(filterName);
+                }});
+                String filterId = tzFilterDfn.getId();
+
                 TzDispframeElement tzDispframeElementButton = new TzDispframeElement();
                 tzDispframeElementButton.setId(nextDispFrameElementId());
                 tzDispframeElementButton.setDispframeId(tzDispframeList.getId());
@@ -279,6 +299,53 @@ public class DispframeModule {
 
             return tzDispframeElement;
         }).collect(Collectors.toList());
+
+        // 筛选外键字段
+        List<TzField> joinFieldList = fieldList.stream().filter(e -> StringUtils.isNotBlank(e.getJoinName())).collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(joinFieldList)) {
+            for (TzField joinField : joinFieldList) {
+                if (joinField.getName().equals("CreatedByName")){
+                    continue;
+                }
+                // 如果有外键关联，在表单中隐藏外键，在列表中隐藏本表字段，展示外链字段
+                if (StringUtils.equalsIgnoreCase(type, "List")) {
+                    TzJoin tzJoin = tzJoinMapper.selectOne(new TzJoin() {{
+                        setBusentityId(joinField.getBusentityId());
+                        setName(joinField.getJoinName());
+                    }});
+                    if (tzJoin == null || StringUtils.isBlank(tzJoin.getId())) throw new RuntimeException("join字段" + joinField.getName() + "配置错误");
+                    List<TzJoinSpec> tzJoinSpecList = tzJoinSpecMapper.select(new TzJoinSpec() {{
+                        setJoinId(tzJoin.getId());
+                    }});
+                    Integer seq = Integer.MAX_VALUE;
+                    if (CollectionUtils.isEmpty(tzJoinSpecList)) throw new RuntimeException("join字段" + joinField.getName() + "配置错误");
+                    for (TzJoinSpec joinSpec : tzJoinSpecList) {
+                        List<TzField> ownFieldList = fieldList.stream().filter(e -> e.getName().equals(joinSpec.getSrcFldName()) && StringUtils.isBlank(e.getJoinName())).collect(Collectors.toList());
+                        if (!CollectionUtils.isEmpty(ownFieldList)) {
+                            TzField ownField = ownFieldList.get(0);
+                            if (ownField != null) {
+                                TzDispframeElement dispframeElement = tzDispframeElementList.stream().filter(e -> e.getFieldId().equals(ownField.getId())).collect(Collectors.toList()).get(0);
+                                dispframeElement.setFldHide("Y");
+                                if (dispframeElement.getDisplayOrder() < seq) {
+                                    seq = dispframeElement.getDisplayOrder();
+                                }
+                            }
+                        }
+                    }
+                    // 显示外表字段，替换顺序
+                    if (!seq.equals(Integer.MAX_VALUE)) {
+                        TzDispframeElement dispframeElement = tzDispframeElementList.stream().filter(e -> e.getFieldId().equals(joinField.getId())).collect(Collectors.toList()).get(0);
+                        dispframeElement.setFldHide("N");
+                        dispframeElement.setDisplayOrder(seq);
+                    }
+
+                } else if (StringUtils.equalsIgnoreCase(type, "Form")) {
+                    TzDispframeElement dispframeElement = tzDispframeElementList.stream().filter(e -> e.getFieldId().equals(joinField.getId())).collect(Collectors.toList()).get(0);
+                    dispframeElement.setFldHide("Y");
+                }
+            }
+        }
+
         for (TzDispframeElement tzDispframeElement : tzDispframeElementList) {
             int flag = tzDispframeElementMapper.insert(tzDispframeElement);
             if (flag != 1) {

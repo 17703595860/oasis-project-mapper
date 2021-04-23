@@ -3,9 +3,13 @@ package com.study.mapper;
 import com.study.entity.*;
 import com.study.utils.ColumnMetaData;
 import com.study.utils.DatabaseUtil;
+import com.study.utils.medadata.FilterDfn;
 import com.study.utils.medadata.Be;
 import com.study.utils.medadata.Bm;
 import com.study.utils.medadata.Link;
+import com.study.utils.medadata.Prompt;
+import com.study.utils.medadata.Transform;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,6 +74,18 @@ public class MetadataModule {
   private TzPermissionMapper tzPermissionMapper;
 
   @Autowired
+  private TzPtDefMapper tzPtDefMapper;
+  @Autowired
+  private TzPtFieldDefMapper tzPtFieldDefMapper;
+
+  @Autowired
+  private TzFilterDfnMapper tzFilterDfnMapper;
+  @Autowired
+  private TzFilterFldMapper tzFilterFldMapper;
+  @Autowired
+  private TzFilterfldOperatorMapper tzFilterfldOperatorMapper;
+
+  @Autowired
   private DataSourceTransactionManager transactionManager;
 
   String admin = "ADMIN0000000000001";
@@ -91,6 +107,13 @@ public class MetadataModule {
   private String permissionGroupIdPre = "cmsPMGroup0000";
   private String permissionIdPre = "cmsPM000000000";
 
+  private String promptIdPre = "cmsPMGroup0000";
+  private String promptFieldIdPre = "cmsPM000000000";
+
+  private String filterDfnIdPre = "cmsFilter00000";
+  private String filterFldIdPre = "cmsFltFld00000";
+  private String filterFldOperatorIdPre = "cmsFldOpr00000";
+
   private Integer beIdA = 1;
   private Integer fieldIdA = 1;
   private Integer joinIdA = 1;
@@ -105,6 +128,13 @@ public class MetadataModule {
 
   private Integer permissionGroupIdA = 1;
   private Integer permissionIdA = 1;
+
+  private Integer promptIdA = 1;
+  private Integer promptFieldIdA = 1;
+
+  private Integer filterDfnIdA = 1;
+  private Integer filterFldIdA = 1;
+  private Integer filterFldOperatorIdA = 1;
 
   private String module = "POC";
   private String moduleDesc = "POC模块";
@@ -134,6 +164,17 @@ public class MetadataModule {
       setEntityClass(TzStudent.class);
       setTableName("TZ_STUDENT");
       setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
+      setFilter(new FilterDfn(null, "TZStudentFilter", Arrays.asList("CODE", "NAME", "SEX")));
+      setTransformList(new ArrayList<Transform>() {{
+        add(new Transform("SEX", "STUDENT_SEX"));
+      }});
+      setPromptList(new ArrayList<Prompt>() {{
+        add(new Prompt(null, "classIdPrompt", "CLASS_ID", new Be() {{
+          setBeName("TZClass");
+          setEntityClass(TzClass.class);
+          setTableName("TZ_CLASS");
+        }}, "NAME", "ID", Arrays.asList("ID", "NAME")));
+      }});
       setZBeList(new ArrayList<Be>() {{
         add(new Be() {{
           setBeName("TZIdcard");
@@ -173,11 +214,155 @@ public class MetadataModule {
 
       addPermission();
 
+      addPrompt();
+
+      addfilter();
+
       transactionManager.commit(status);
     } catch (Exception e) {
       e.printStackTrace();
       transactionManager.rollback(status);
     }
+  }
+
+  private void addPrompt() {
+    List<Be> tempBelist = new ArrayList<>();
+    addBeList(tempBelist, beList);
+    for (Be be : tempBelist) {
+      List<Prompt> promptList = be.getPromptList();
+      if (!CollectionUtils.isEmpty(promptList)) {
+        // prompt
+        for (Prompt prompt : promptList) {
+
+          TzPtDef tmppt = tzPtDefMapper.selectOne(new TzPtDef() {{
+            setName(prompt.getPromptName());
+          }});
+          if (tmppt != null) throw new RuntimeException("prompt:" + prompt.getPromptName() + "已经存在");
+          prompt.setPromptId(nextPromptId());
+          TzBusentity tzBusentity = tzBusentityMapper.selectOne(new TzBusentity() {{
+            setName(prompt.getBe().getBeName());
+          }});
+          prompt.getBe().setBeId(tzBusentity.getId());
+
+          List<TzField> fieldList = tzFieldMapper.select(new TzField() {{
+            setBusentityId(tzBusentity.getId());
+          }});
+          String labelFieldId = tzFieldMapper.selectOne(new TzField() {{
+            setBusentityId(tzBusentity.getId());
+            setName(getFieldName(prompt.getLabelColName(), prompt.getBe()));
+          }}).getId();
+          String valueFieldId = tzFieldMapper.selectOne(new TzField() {{
+            setBusentityId(tzBusentity.getId());
+            setName(getFieldName(prompt.getValueColName(), prompt.getBe()));
+          }}).getId();
+          TzPtDef tzPtDef = new TzPtDef(prompt.getPromptId(), 1, admin, date, admin, date, null, prompt.getPromptName(), tzBusentity.getId(), null, null, labelFieldId, valueFieldId);
+          tzPtDefMapper.insertSelective(tzPtDef);
+
+          // promptField
+          List<String> promptFldCollist = prompt.getPromptFldCollist();
+          if (!CollectionUtils.isEmpty(promptFldCollist)) {
+            List<TzField> fieldPromptList = promptFldCollist.stream().map(e -> {
+              String fieldName = getFieldName(e, prompt.getBe());
+              return tzFieldMapper.selectOne(new TzField() {{
+                setBusentityId(tzBusentity.getId());
+                setName(fieldName);
+              }});
+            }).collect(Collectors.toList());
+            if (fieldPromptList.size() != promptFldCollist.size()) throw new RuntimeException("prompt配置错误");
+            AtomicInteger seq = new AtomicInteger(0);
+            for (TzField tzField : fieldPromptList) {
+              TzPtFieldDef tzPtFieldDef = new TzPtFieldDef(nextPromptFieldId(), 1, admin, date, admin, date, null, tzPtDef.getId(), tzField.getId(), "normal", "Y", seq.incrementAndGet(), null, tzBusentity.getName() + "." + tzField.getName(), "Y", tzField.getControlType(), tzField.getTransformCode());
+              if (tzField.getName().equals("Id")) {
+                tzPtFieldDef.setDisplayFlg("N");
+                tzPtFieldDef.setSearchFlg("N");
+              }
+              tzPtFieldDefMapper.insertSelective(tzPtFieldDef);
+            }
+          }
+
+          // 回写字段配置
+          String tempFieldId = tzFieldMapper.selectOne(new TzField() {{
+            setName(getFieldName(prompt.getColName(), be));
+            setBusentityId(be.getBeId());
+          }}).getId();
+          tzFieldMapper.updateByPrimaryKeySelective(new TzField() {{
+            setId(tempFieldId);
+            setControlType("prompt");
+            setPtBename(tzBusentity.getName());
+          }});
+
+          promptFieldIdA += 10;
+        }
+      }
+    }
+  }
+
+  private void addfilter() {
+    List<Be> tempBelist = new ArrayList<>();
+    addBeList(tempBelist, beList);
+    for (Be be : tempBelist) {
+      FilterDfn filter = be.getFilter();
+      if (filter != null) {
+        // filterDfn
+        TzFilterDfn tempFilter = tzFilterDfnMapper.selectOne(new TzFilterDfn() {{
+          setName(filter.getFilterName());
+        }});
+        if (tempFilter != null) throw new RuntimeException("filter:" + filter.getFilterName() + "已存在");
+        filter.setFilterId(nextFilterDfnId());
+        TzFilterDfn tzFilterDfn = new TzFilterDfn(filter.getFilterId(), be.getBeId(), filter.getFilterName(), null, "N", null, "Y", 1, admin, date, admin, date);
+        tzFilterDfnMapper.insertSelective(tzFilterDfn);
+        // filterFld
+        List<String> filterFldList = filter.getFilterFldList();
+        if (!CollectionUtils.isEmpty(filterFldList)) {
+          AtomicInteger seq = new AtomicInteger(0);
+          for (String colName : filterFldList) {
+            String fieldName = getFieldName(colName, be);
+            TzField tzField = tzFieldMapper.selectOne(new TzField() {{
+              setBusentityId(be.getBeId());
+              setName(fieldName);
+            }});
+
+            TzFilterFld tzFilterFld = new TzFilterFld(nextFilterFldId(), tzFilterDfn.getId(), tzField.getId(), null, seq.incrementAndGet(), tzField.getControlType(), tzField.getTransformCode(), tzField.getPtBename(), null, "N", "N", "N", be.getBeName() + "." + fieldName, null, "Y", 1, admin, date, admin, date);
+            if (StringUtils.equals(tzField.getControlType(), "prompt")) {
+              List<Prompt> promptList = be.getPromptList();
+              Prompt tzPrompt = promptList.stream().filter(prompt -> prompt.getColName().equals(colName)).collect(Collectors.toList()).get(0);
+              tzFilterFld.setPtDefId(tzPrompt.getPromptId());
+            }
+            if (StringUtils.equalsAny(tzField.getControlType(), "prompt", "transform")) {
+              tzFilterFld.setFldIsdown("Y");
+            }
+            if (colName.equals("ID")) {
+              tzFilterFld.setFldReadonly("Y");
+              tzFilterFld.setFldHide("Y");
+            }
+            tzFilterFldMapper.insertSelective(tzFilterFld);
+
+            List<String> operatorList = null;
+            // 添加操作符
+            if (StringUtils.equalsAny(tzFilterFld.getControlType(), "prompt", "transform")) {
+              operatorList = Arrays.asList("07", "01", "02", "08", "09", "10");
+            } else if (StringUtils.equalsAny(tzFilterFld.getControlType(), "number")) {
+              operatorList = Arrays.asList("07", "01", "02", "03", "04", "05", "06");
+            } else if (StringUtils.equalsAny(tzFilterFld.getControlType(), "date", "datetime", "time")) {
+              operatorList = Arrays.asList("07", "01", "02", "08", "09", "10");
+            } else {
+              operatorList = Arrays.asList("07", "01", "02", "08", "09");
+            }
+            for (String operator : operatorList) {
+              TzFilterfldOperator tzFilterfldOperator = new TzFilterfldOperator(nextFilterFldOperatorId(), tzFilterFld.getId(), operator, "Y", "N", null, 1, admin, date, admin, date);
+              if (operator.equals("07")) {
+                tzFilterfldOperator.setIsDefOprt("Y");
+              }
+              tzFilterfldOperatorMapper.insertSelective(tzFilterfldOperator);
+            }
+          }
+        }
+
+      }
+      filterFldIdPre += 100;
+      filterFldOperatorIdPre += 100;
+    }
+
   }
 
   private void addPermission() {
@@ -217,13 +402,25 @@ public class MetadataModule {
       TzMessageCollection tzMessageCollection = new TzMessageCollection(nextMessageId(), be.getBeName(), be.getBeName(), "Y", 1, admin, date, admin, date);
       tzMessageCollectionMapper.insertSelective(tzMessageCollection);
 
+      TzBusentity tzBusentity = tzBusentityMapper.selectByPrimaryKey(be.getBeId());
+      tzBusentity.setMsgCollectionId(tzMessageCollection.getId());
+      tzBusentityMapper.updateByPrimaryKeySelective(tzBusentity);
+
       List<ColumnMetaData> colData = databaseUtil.getColData(be.getTableName());
       Map<String, ColumnMetaData> fieldColData = getFieldMapColData(be, colData);
       for (Map.Entry<String, ColumnMetaData> entry : fieldColData.entrySet()) {
         String fieldName = entry.getKey();
         ColumnMetaData colMetaData = entry.getValue();
         // 创建消息集合
-        TzMessageInfo tzMessageInfo1 = new TzMessageInfo(nextMessageInfId(), tzMessageCollection.getId(), "ZHS", fieldName, be.getBeName() + "." + fieldName, StringUtils.isBlank(colMetaData.getColComment()) ? fieldName : colMetaData.getColComment(), "Y", 1, admin, date, admin, date);
+        String colComment = colMetaData.getColComment();
+        if (StringUtils.isBlank(colComment)) {
+          colComment = fieldName;
+        }
+        colComment = colComment.replace("，", ",");
+        if (colComment.contains(",")) {
+          colComment = colComment.substring(0, colComment.indexOf(","));
+        }
+        TzMessageInfo tzMessageInfo1 = new TzMessageInfo(nextMessageInfId(), tzMessageCollection.getId(), "ZHS", fieldName, be.getBeName() + "." + fieldName, colComment, "Y", 1, admin, date, admin, date);
         TzMessageInfo tzMessageInfo2 = new TzMessageInfo(nextMessageInfId(), tzMessageCollection.getId(), "ENG", fieldName, be.getBeName() + "." + fieldName, fieldName, "Y", 1, admin, date, admin, date);
         tzMessageInfoMapper.insertSelective(tzMessageInfo1);
         tzMessageInfoMapper.insertSelective(tzMessageInfo2);
@@ -311,6 +508,17 @@ public class MetadataModule {
         tzField.setScale(coldata.getScaleLen());
         tzField.setRequired(getColRequired(coldata));
         tzField.setControlType(getControlType(coldata));
+        // 提前添加好的转换值添加
+        List<Transform> transformList = be.getTransformList();
+        if (!CollectionUtils.isEmpty(transformList)) {
+          List<Transform> tempTransformList = transformList.stream().filter(e -> e.getColName().equals(coldata.getColName())).collect(Collectors.toList());
+          if (!CollectionUtils.isEmpty(tempTransformList)) {
+            Transform transform = tempTransformList.get(0);
+            tzField.setControlType("transform");
+            tzField.setTransformCode(transform.getTransformCode());
+          }
+        }
+
         int flag = tzFieldMapper.insertSelective(tzField);
         if (flag != 1){
           throw new RuntimeException("Field" + fieldName + "字段添加失败");
@@ -509,11 +717,33 @@ public class MetadataModule {
   private String nextPermissionId() {
     return permissionIdPre + String.format("%0" + (idNum-permissionIdPre.length()) + "d", permissionIdA++);
   }
+  private String nextPromptId() {
+    return promptIdPre + String.format("%0" + (idNum-promptIdPre.length()) + "d", promptIdA++);
+  }
+  private String nextPromptFieldId() {
+    return promptFieldIdPre + String.format("%0" + (idNum-promptFieldIdPre.length()) + "d", promptFieldIdA++);
+  }
+  private String nextFilterDfnId() {
+    return filterDfnIdPre + String.format("%0" + (idNum-filterDfnIdPre.length()) + "d", filterDfnIdA++);
+  }
+  private String nextFilterFldId() {
+    return filterFldIdPre + String.format("%0" + (idNum-filterFldIdPre.length()) + "d", filterFldIdA++);
+  }
+  private String nextFilterFldOperatorId() {
+    return filterFldOperatorIdPre + String.format("%0" + (idNum-filterFldOperatorIdPre.length()) + "d", filterFldOperatorIdA++);
+  }
 
   @Test
   public void testDatabaseUtils() throws SQLException {
     Map<String, List<ColumnMetaData>> map = databaseUtil.getAllMap("oasisdev");
     System.out.println(map);
+  }
+
+  @Test
+  public void testReplace() {
+    String s = "asasasasasas";
+    System.out.println(s.replace("a", "L"));
+    System.out.println(StringUtils.replaceOnce(s, "a", "L"));
   }
 
 }

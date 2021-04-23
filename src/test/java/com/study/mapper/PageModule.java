@@ -1,9 +1,11 @@
 package com.study.mapper;
 
+import com.study.entity.TzBmentity;
 import com.study.entity.TzBusentity;
 import com.study.entity.TzBusmodule;
 import com.study.entity.TzComponent;
 import com.study.entity.TzDispframe;
+import com.study.entity.TzLink;
 import com.study.entity.TzPage;
 import com.study.entity.TzPageZone;
 import com.study.entity.TzPermission;
@@ -58,6 +60,10 @@ public class PageModule {
   private TzPageZoneMapper tzPageZoneMapper;
   @Autowired
   private TzPagezoneContentMapper tzPagezoneContentMapper;
+  @Autowired
+  private TzLinkMapper tzLinkMapper;
+  @Autowired
+  private TzBmentityMapper tzBmentityMapper;
 
 
   String admin = "ADMIN0000000000001";
@@ -71,29 +77,19 @@ public class PageModule {
   private Integer pageZoneIdA = 1;
   private Integer pageZoneContentIdA = 1;
 
-  @Test
-  public void addComponentPageId() {
-    String detailComponentId = "534420627126358027";
-    String detailPageId = "cmspage00000000002";
-
-    TzComponent tzComponent = tzComponentMapper.selectByPrimaryKey(detailComponentId);
-    tzComponent.setPageId(detailPageId);
-    tzComponentMapper.updateByPrimaryKeySelective(tzComponent);
-  }
-
   /**
    * 根据be名称添加ListAdmin展示框架和展示框架元素
    */
   @Test
   public void createPageList() {
-    String bmName = "TZClass";
+    String bmName = "TZStudent";
 
-    String detailComponentId = "534420627126358027";
-    String listComponentId = "534420627126358026";
+    String detailComponentId = "";
+    String listComponentId = "";
 
     String listDispId = "cmsDispFrame000002";
     String detailDispId = "cmsDispFrame000001";
-    List<String> detailListIds = Arrays.asList("152458540154882");
+    List<String> detailListIds = Arrays.asList();
 
 
     DefaultTransactionDefinition def = new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED);
@@ -113,9 +109,10 @@ public class PageModule {
       tzPageMapper.insertSelective(tzPageList);
       // 插入List pageZone
       TzDispframe tzDispframeList = tzDispframeMapper.selectByPrimaryKey(listDispId);
-      TzPermission tzPermission = tzPermissionMapper.selectOne(new TzPermission() {{
-        setCode(bmName + ":" + tzDispframeList.getBeName() + ":retrieve");
-      }});
+      TzPermission tzPermission = null;
+
+      tzPermission = getTzPermission(tzBusmodule, tzDispframeList);
+
       if (tzDispframeList == null) throw new RuntimeException("listDis" + listDispId + "不存在");
       TzPageZone tzPageZone = new TzPageZone(nextpageZoneId(), tzDispframeList.getDispframeName(), tzPageList.getId(), tzDispframeList.getType(), tzDispframeList.getBeName(), tzDispframeList.getId(), null, null
           , 1, tzPermission.getId(), tzDispframeList.getBeName() + "." + tzDispframeList.getBeName(), null, "Y", null, 1, admin, date, admin, date);
@@ -136,12 +133,10 @@ public class PageModule {
         for (String detailListId : detailListIds) {
           //  插入detail List pageZone
           TzDispframe tzDispframeDetailList = tzDispframeMapper.selectByPrimaryKey(detailListId);
-          TzPermission tzPermissiondetailList = tzPermissionMapper.selectOne(new TzPermission() {{
-            setCode(bmName + ":" + tzDispframeDetail.getBeName() + ":" + tzDispframeDetailList.getBeName() + ":retrieve");
-          }});
+          TzPermission tzPermissiondetailList = getTzPermission(tzBusmodule, tzDispframeDetailList);
           if (tzDispframeDetailList == null) throw new RuntimeException("DetailListDis" + detailListId + "不存在");
           TzPageZone tzPageZoneDetailList = new TzPageZone(nextpageZoneId(), tzDispframeDetailList.getDispframeName(), tzPageDetail.getId(), tzDispframeDetailList.getType(), tzDispframeDetailList.getBeName(), tzDispframeDetailList.getId(), null, tzPageZoneDetail.getId()
-              , seq.incrementAndGet(), tzPermission.getId(), tzDispframeDetailList.getBeName() + "." + tzDispframeDetailList.getBeName(), null, "Y", null, 1, admin, date, admin, date);
+              , seq.incrementAndGet(), tzPermissiondetailList.getId(), tzDispframeDetailList.getBeName() + "." + tzDispframeDetailList.getBeName(), null, "Y", null, 1, admin, date, admin, date);
           tzPageZoneMapper.insertSelective(tzPageZoneDetailList);
         }
       }
@@ -163,6 +158,24 @@ public class PageModule {
       e.printStackTrace();
       transactionManager.rollback(status);
     }
+  }
+
+  private TzPermission getTzPermission(TzBusmodule tzBusmodule, TzDispframe tzDispframeList) {
+    TzPermission tzPermission;
+    String linkName = tzBmentityMapper.selectOne(new TzBmentity() {{
+      setBusmoduleId(tzBusmodule.getId());
+      setBeName(tzDispframeList.getBeName());
+    }}).getLinkName();
+    if (StringUtils.isBlank(linkName)) {
+      tzPermission = tzPermissionMapper.selectOne(new TzPermission() {{
+        setCode(tzBusmodule.getName() + ":" + tzDispframeList.getBeName() + ":retrieve");
+      }});
+    } else {
+      tzPermission = tzPermissionMapper.selectOne(new TzPermission() {{
+        setCode(tzBusmodule.getName() + ":" + linkName.split("/")[0] + ":" + linkName.split("/")[1] + ":retrieve");
+      }});
+    }
+    return tzPermission;
   }
 
   private String nextpageId() {

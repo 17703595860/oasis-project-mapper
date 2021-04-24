@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzPageZoneMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzPageZone">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="PAGE_ID" jdbcType="VARCHAR" property="pageId" />
+    <result column="TYPE" jdbcType="VARCHAR" property="type" />
+    <result column="BE_NAME" jdbcType="VARCHAR" property="beName" />
+    <result column="DEFAULT_DISPFRAME_ID" jdbcType="VARCHAR" property="defaultDispframeId" />
+    <result column="DATASET_FLG" jdbcType="CHAR" property="datasetFlg" />
+    <result column="PAR_PAGEZONE_ID" jdbcType="VARCHAR" property="parPagezoneId" />
+    <result column="SEQ" jdbcType="INTEGER" property="seq" />
+    <result column="PERMISSION_ID" jdbcType="VARCHAR" property="permissionId" />
+    <result column="LABEL_MESSAGE_CODE" jdbcType="VARCHAR" property="labelMessageCode" />
+    <result column="LABEL_OVERRIDE" jdbcType="VARCHAR" property="labelOverride" />
+    <result column="ACTIVE_FLG" jdbcType="CHAR" property="activeFlg" />
+    <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+  </resultMap>
+</mapper>

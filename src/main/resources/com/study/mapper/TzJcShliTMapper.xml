@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzJcShliTMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzJcShliT">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="TZ_JCSL_ID" jdbcType="BIGINT" property="tzJcslId" />
+    <result column="TZ_JG_ID" jdbcType="VARCHAR" property="tzJgId" />
+    <result column="TZ_YUNX_KZID" jdbcType="VARCHAR" property="tzYunxKzid" />
+    <result column="TZ_DLZH_ID" jdbcType="VARCHAR" property="tzDlzhId" />
+    <result column="TZ_JC_MC" jdbcType="VARCHAR" property="tzJcMc" />
+    <result column="TZ_XH_QZBDS" jdbcType="VARCHAR" property="tzXhQzbds" />
+    <result column="TZ_JCFWQ_MC" jdbcType="VARCHAR" property="tzJcfwqMc" />
+    <result column="TZ_JOB_YXZT" jdbcType="VARCHAR" property="tzJobYxzt" />
+    <result column="TZ_ZJXTSJ" jdbcType="TIMESTAMP" property="tzZjxtsj" />
+    <result column="TZ_QQCJ_DTTM" jdbcType="TIMESTAMP" property="tzQqcjDttm" />
+    <result column="TZ_JHZX_DTTM" jdbcType="TIMESTAMP" property="tzJhzxDttm" />
+    <result column="TZ_JCKS_DTTM" jdbcType="TIMESTAMP" property="tzJcksDttm" />
+    <result column="TZ_JCJS_DTTM" jdbcType="TIMESTAMP" property="tzJcjsDttm" />
+  </resultMap>
+</mapper>

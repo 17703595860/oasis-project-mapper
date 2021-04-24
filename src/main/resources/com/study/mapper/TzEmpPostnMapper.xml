@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzEmpPostnMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzEmpPostn">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="POSTN_ID" jdbcType="VARCHAR" property="postnId" />
+    <result column="EMP_ID" jdbcType="VARCHAR" property="empId" />
+    <result column="PR_EMP_FLG" jdbcType="CHAR" property="prEmpFlg" />
+    <result column="PR_POSTN_FLG" jdbcType="CHAR" property="prPostnFlg" />
+    <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+  </resultMap>
+</mapper>

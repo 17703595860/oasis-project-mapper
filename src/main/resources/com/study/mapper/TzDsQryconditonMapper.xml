@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzDsQryconditonMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzDsQryconditon">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="DATASET_ID" jdbcType="VARCHAR" property="datasetId" />
+    <result column="SEQ" jdbcType="INTEGER" property="seq" />
+    <result column="OPER_CONDITION" jdbcType="VARCHAR" property="operCondition" />
+    <result column="LEFT_BRACKET" jdbcType="VARCHAR" property="leftBracket" />
+    <result column="FIELD_ID" jdbcType="VARCHAR" property="fieldId" />
+    <result column="OPERATOR" jdbcType="VARCHAR" property="operator" />
+    <result column="FIELD_VAL" jdbcType="VARCHAR" property="fieldVal" />
+    <result column="RIGHT_BRACKET" jdbcType="VARCHAR" property="rightBracket" />
+    <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+  </resultMap>
+</mapper>

@@ -4,7 +4,7 @@ import com.study.entity.TzOpportunity;
 import tk.mybatis.mapper.common.Mapper;
 
 /**
-* Created by Mybatis Generator 2021/04/23
+* Created by Mybatis Generator 2021/04/24
 */
 public interface TzOpportunityMapper extends Mapper<TzOpportunity> {
 }

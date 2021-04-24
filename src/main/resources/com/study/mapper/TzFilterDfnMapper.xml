@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzFilterDfnMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzFilterDfn">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="BE_ID" jdbcType="VARCHAR" property="beId" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="RESULT_MAX_NUM" jdbcType="INTEGER" property="resultMaxNum" />
+    <result column="ADVANCE_MODEL" jdbcType="CHAR" property="advanceModel" />
+    <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />
+    <result column="ACTIVE_FLG" jdbcType="CHAR" property="activeFlg" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+  </resultMap>
+</mapper>

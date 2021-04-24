@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzAqJcddTMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzAqJcddT">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="CLASSID" jdbcType="VARCHAR" property="classid" />
+    <id column="TZ_COM_ID" jdbcType="VARCHAR" property="tzComId" />
+    <id column="TZ_JG_ID" jdbcType="VARCHAR" property="tzJgId" />
+    <id column="TZ_JC_MC" jdbcType="VARCHAR" property="tzJcMc" />
+    <result column="TZ_DD_FLG" jdbcType="VARCHAR" property="tzDdFlg" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+  </resultMap>
+</mapper>

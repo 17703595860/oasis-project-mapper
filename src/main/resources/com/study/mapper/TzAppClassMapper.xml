@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzAppClassMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzAppClass">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="APP_CLASS_CODE" jdbcType="VARCHAR" property="appClassCode" />
+    <result column="APP_CLASS_DESC" jdbcType="VARCHAR" property="appClassDesc" />
+    <result column="APP_CLASS_PATH" jdbcType="VARCHAR" property="appClassPath" />
+    <result column="APP_CLASS_NAME" jdbcType="VARCHAR" property="appClassName" />
+    <result column="APP_CLASS_METHOD" jdbcType="VARCHAR" property="appClassMethod" />
+    <result column="ACTIVE_FLG" jdbcType="CHAR" property="activeFlg" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+  </resultMap>
+</mapper>

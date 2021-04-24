@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzXunhDefnTMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzXunhDefnT">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="TZ_JG_ID" jdbcType="VARCHAR" property="tzJgId" />
+    <result column="TZ_XH_MC" jdbcType="VARCHAR" property="tzXhMc" />
+    <result column="TZ_XH_MS" jdbcType="VARCHAR" property="tzXhMs" />
+    <result column="TZ_EE_BZ" jdbcType="VARCHAR" property="tzEeBz" />
+    <result column="TZ_XH_QZBDS" jdbcType="VARCHAR" property="tzXhQzbds" />
+    <result column="TZ_ZDYXH_BZ" jdbcType="VARCHAR" property="tzZdyxhBz" />
+    <result column="TZ_XHZD_Y" jdbcType="VARCHAR" property="tzXhzdY" />
+    <result column="TZ_XHZD_W" jdbcType="VARCHAR" property="tzXhzdW" />
+    <result column="TZ_XHZD_M1" jdbcType="VARCHAR" property="tzXhzdM1" />
+    <result column="TZ_XHZD_D" jdbcType="VARCHAR" property="tzXhzdD" />
+    <result column="TZ_XHZD_H" jdbcType="VARCHAR" property="tzXhzdH" />
+    <result column="TZ_XHZD_M2" jdbcType="VARCHAR" property="tzXhzdM2" />
+    <result column="TZ_XHZD_S" jdbcType="VARCHAR" property="tzXhzdS" />
+    <result column="TZ_Y_QZGZ" jdbcType="VARCHAR" property="tzYQzgz" />
+    <result column="TZ_Y_QSNF" jdbcType="INTEGER" property="tzYQsnf" />
+    <result column="TZ_Y_JZNF" jdbcType="INTEGER" property="tzYJznf" />
+    <result column="TZ_Y_LBQZ" jdbcType="VARCHAR" property="tzYLbqz" />
+    <result column="TZ_Y_XHQZ" jdbcType="VARCHAR" property="tzYXhqz" />
+    <result column="TZ_Y_QZBDS" jdbcType="VARCHAR" property="tzYQzbds" />
+    <result column="TZ_M1_QZGZ" jdbcType="VARCHAR" property="tzM1Qzgz" />
+    <result column="TZ_M1_QSYF" jdbcType="INTEGER" property="tzM1Qsyf" />
+    <result column="TZ_M1_JZYF" jdbcType="INTEGER" property="tzM1Jzyf" />
+    <result column="TZ_M1_LBQZ" jdbcType="VARCHAR" property="tzM1Lbqz" />
+    <result column="TZ_M1_XHQZ" jdbcType="VARCHAR" property="tzM1Xhqz" />
+    <result column="TZ_M1_QZBDS" jdbcType="VARCHAR" property="tzM1Qzbds" />
+    <result column="TZ_RZ_RY_BZ" jdbcType="VARCHAR" property="tzRzRyBz" />
+    <result column="TZ_D_QZGZ" jdbcType="VARCHAR" property="tzDQzgz" />
+    <result column="TZ_D_QSRQ" jdbcType="INTEGER" property="tzDQsrq" />
+    <result column="TZ_D_JZRQ" jdbcType="INTEGER" property="tzDJzrq" />
+    <result column="TZ_D_LBQZ" jdbcType="VARCHAR" property="tzDLbqz" />
+    <result column="TZ_D_XHQZ" jdbcType="VARCHAR" property="tzDXhqz" />
+    <result column="TZ_D_ZDRQ" jdbcType="INTEGER" property="tzDZdrq" />
+    <result column="TZ_D_QZBDS" jdbcType="VARCHAR" property="tzDQzbds" />
+    <result column="TZ_W_QZGZ" jdbcType="VARCHAR" property="tzWQzgz" />
+    <result column="TZ_W_QSRQ" jdbcType="INTEGER" property="tzWQsrq" />
+    <result column="TZ_W_JZRQ" jdbcType="INTEGER" property="tzWJzrq" />
+    <result column="TZ_W_LBQZ" jdbcType="VARCHAR" property="tzWLbqz" />
+    <result column="TZ_W_XHQZ" jdbcType="VARCHAR" property="tzWXhqz" />
+    <result column="TZ_W_ZDRQ1" jdbcType="INTEGER" property="tzWZdrq1" />
+    <result column="TZ_W_ZDZC" jdbcType="INTEGER" property="tzWZdzc" />
+    <result column="TZ_W_ZDRQ2" jdbcType="INTEGER" property="tzWZdrq2" />
+    <result column="TZ_W_QZBDS" jdbcType="VARCHAR" property="tzWQzbds" />
+    <result column="TZ_H_QZGZ" jdbcType="VARCHAR" property="tzHQzgz" />
+    <result column="TZ_H_QSXS" jdbcType="INTEGER" property="tzHQsxs" />
+    <result column="TZ_H_JZXS" jdbcType="INTEGER" property="tzHJzxs" />
+    <result column="TZ_H_LBQZ" jdbcType="VARCHAR" property="tzHLbqz" />
+    <result column="TZ_H_XHQZ" jdbcType="VARCHAR" property="tzHXhqz" />
+    <result column="TZ_H_QZBDS" jdbcType="VARCHAR" property="tzHQzbds" />
+    <result column="TZ_M2_QZGZ" jdbcType="VARCHAR" property="tzM2Qzgz" />
+    <result column="TZ_M2_QSFZ" jdbcType="INTEGER" property="tzM2Qsfz" />
+    <result column="TZ_M2_JZFZ" jdbcType="INTEGER" property="tzM2Jzfz" />
+    <result column="TZ_M2_LBQZ" jdbcType="VARCHAR" property="tzM2Lbqz" />
+    <result column="TZ_M2_XHQZ" jdbcType="VARCHAR" property="tzM2Xhqz" />
+    <result column="TZ_M2_QZBDS" jdbcType="VARCHAR" property="tzM2Qzbds" />
+    <result column="TZ_S_QZGZ" jdbcType="VARCHAR" property="tzSQzgz" />
+    <result column="TZ_S_QSM" jdbcType="INTEGER" property="tzSQsm" />
+    <result column="TZ_S_JZM" jdbcType="INTEGER" property="tzSJzm" />
+    <result column="TZ_S_LBQZ" jdbcType="VARCHAR" property="tzSLbqz" />
+    <result column="TZ_S_XHQZ" jdbcType="VARCHAR" property="tzSXhqz" />
+    <result column="TZ_S_QZBDS" jdbcType="VARCHAR" property="tzSQzbds" />
+    <result column="TZ_YEAR_CHECK" jdbcType="VARCHAR" property="tzYearCheck" />
+    <result column="TZ_MONTH_CHECK" jdbcType="VARCHAR" property="tzMonthCheck" />
+    <result column="TZ_DAY1_CHECK" jdbcType="VARCHAR" property="tzDay1Check" />
+    <result column="TZ_DAY2_CHECK" jdbcType="VARCHAR" property="tzDay2Check" />
+    <result column="TZ_HOUR_CHECK" jdbcType="VARCHAR" property="tzHourCheck" />
+    <result column="TZ_MINUTE_CHECK" jdbcType="VARCHAR" property="tzMinuteCheck" />
+    <result column="TZ_SECOND_CHECK" jdbcType="VARCHAR" property="tzSecondCheck" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+  </resultMap>
+</mapper>

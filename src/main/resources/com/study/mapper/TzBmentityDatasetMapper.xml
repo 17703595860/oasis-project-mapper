@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzBmentityDatasetMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzBmentityDataset">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="BMENTITY_ID" jdbcType="VARCHAR" property="bmentityId" />
+    <result column="DATASET_TYPE" jdbcType="VARCHAR" property="datasetType" />
+    <result column="DATASET_ID" jdbcType="VARCHAR" property="datasetId" />
+    <result column="DISPSCHEME_ID" jdbcType="VARCHAR" property="dispschemeId" />
+    <result column="SEQ" jdbcType="INTEGER" property="seq" />
+    <result column="ACTIVE_FLG" jdbcType="CHAR" property="activeFlg" />
+    <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+  </resultMap>
+</mapper>

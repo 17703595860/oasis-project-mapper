@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzFieldMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzField">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="BUSENTITY_ID" jdbcType="VARCHAR" property="busentityId" />
+    <result column="JOIN_NAME" jdbcType="VARCHAR" property="joinName" />
+    <result column="COL_NAME" jdbcType="VARCHAR" property="colName" />
+    <result column="CALCULATED" jdbcType="CHAR" property="calculated" />
+    <result column="CALCVAL" jdbcType="VARCHAR" property="calcval" />
+    <result column="DATA_TYPE" jdbcType="VARCHAR" property="dataType" />
+    <result column="TEXTLEN" jdbcType="INTEGER" property="textlen" />
+    <result column="PREC_NUM" jdbcType="INTEGER" property="precNum" />
+    <result column="SCALE" jdbcType="INTEGER" property="scale" />
+    <result column="REQUIRED" jdbcType="CHAR" property="required" />
+    <result column="FORCEACTIVE" jdbcType="CHAR" property="forceactive" />
+    <result column="ACTIVE_FLG" jdbcType="CHAR" property="activeFlg" />
+    <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+    <result column="CONTROL_TYPE" jdbcType="VARCHAR" property="controlType" />
+    <result column="PT_BENAME" jdbcType="VARCHAR" property="ptBename" />
+    <result column="TRANSFORM_CODE" jdbcType="VARCHAR" property="transformCode" />
+  </resultMap>
+</mapper>

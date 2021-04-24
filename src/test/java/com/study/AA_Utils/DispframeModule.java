@@ -1,9 +1,9 @@
-package com.study.mapper;
+package com.study.AA_Utils;
 
 import com.study.entity.*;
+import com.study.mapper.*;
 import com.study.utils.SnowFlake;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +14,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.CollectionUtils;
-import tk.mybatis.mapper.entity.Example;
 
-import java.text.NumberFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;

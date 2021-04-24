@@ -1,11 +1,10 @@
-package com.study.mapper;
+package com.study.AA_Utils;
 
+import com.study.mapper.*;
 import com.study.entity.TzBmentity;
-import com.study.entity.TzBusentity;
 import com.study.entity.TzBusmodule;
 import com.study.entity.TzComponent;
 import com.study.entity.TzDispframe;
-import com.study.entity.TzLink;
 import com.study.entity.TzPage;
 import com.study.entity.TzPageZone;
 import com.study.entity.TzPermission;

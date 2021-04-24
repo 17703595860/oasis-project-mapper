@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzColuArtMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzColuArt">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="SITE_ID" jdbcType="VARCHAR" property="siteId" />
+    <result column="COLU_ID" jdbcType="VARCHAR" property="coluId" />
+    <result column="ART_ID" jdbcType="VARCHAR" property="artId" />
+    <result column="ART_PUB_DT" jdbcType="TIMESTAMP" property="artPubDt" />
+    <result column="ART_PUB_STATE" jdbcType="VARCHAR" property="artPubState" />
+    <result column="ART_URL" jdbcType="VARCHAR" property="artUrl" />
+    <result column="STATIC_ART_URL" jdbcType="VARCHAR" property="staticArtUrl" />
+    <result column="ART_SEQ" jdbcType="INTEGER" property="artSeq" />
+    <result column="MAX_ZD_SEQ" jdbcType="INTEGER" property="maxZdSeq" />
+    <result column="PUBLISHER" jdbcType="VARCHAR" property="publisher" />
+    <result column="PUB_DEP" jdbcType="VARCHAR" property="pubDep" />
+    <result column="STATIC_FLAG" jdbcType="INTEGER" property="staticFlag" />
+    <result column="PROJECT_LIMIT" jdbcType="VARCHAR" property="projectLimit" />
+    <result column="STATIC_NAME" jdbcType="VARCHAR" property="staticName" />
+    <result column="STATIC_AOTO_NAME" jdbcType="VARCHAR" property="staticAotoName" />
+    <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+    <result column="ART_HTML" jdbcType="LONGVARCHAR" property="artHtml" />
+    <result column="ART_PHONE_HTML" jdbcType="LONGVARCHAR" property="artPhoneHtml" />
+    <result column="ART_CONENT_SCR" jdbcType="LONGVARCHAR" property="artConentScr" />
+    <result column="ART_PHONE_CONENT_SCR" jdbcType="LONGVARCHAR" property="artPhoneConentScr" />
+  </resultMap>
+</mapper>

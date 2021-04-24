@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzFirstCachePolicyMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzFirstCachePolicy">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="POLICY_NAME" jdbcType="VARCHAR" property="policyName" />
+    <result column="INITIAL_CAPACITY" jdbcType="INTEGER" property="initialCapacity" />
+    <result column="MAXIMUM_SIZE" jdbcType="INTEGER" property="maximumSize" />
+    <result column="EXPIRE_TIME" jdbcType="INTEGER" property="expireTime" />
+    <result column="TIME_UNIT" jdbcType="VARCHAR" property="timeUnit" />
+    <result column="EXPIRE_MODE" jdbcType="VARCHAR" property="expireMode" />
+    <result column="ACTIVE_FLG" jdbcType="CHAR" property="activeFlg" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+  </resultMap>
+</mapper>

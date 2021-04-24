@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzCacheConfigurationMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzCacheConfiguration">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="BEAN_NAME" jdbcType="VARCHAR" property="beanName" />
+    <result column="METHOD_NAME" jdbcType="VARCHAR" property="methodName" />
+    <result column="OPERATION_TYPE" jdbcType="VARCHAR" property="operationType" />
+    <result column="CACHE_NAME" jdbcType="VARCHAR" property="cacheName" />
+    <result column="CACHE_DEPICT" jdbcType="VARCHAR" property="cacheDepict" />
+    <result column="ENABLE_FIRST_CACHE" jdbcType="CHAR" property="enableFirstCache" />
+    <result column="REMOVE_ALL_ENTRIES" jdbcType="CHAR" property="removeAllEntries" />
+    <result column="FIRST_CACHE_POLICY_ID" jdbcType="VARCHAR" property="firstCachePolicyId" />
+    <result column="SECONDARY_CACHE_POLICY_ID" jdbcType="VARCHAR" property="secondaryCachePolicyId" />
+    <result column="ACTIVE_FLG" jdbcType="CHAR" property="activeFlg" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+  </resultMap>
+</mapper>

@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
-* Created by Mybatis Generator 2021/04/23
+* Created by Mybatis Generator 2021/04/24
 */
 @Table(name = "TZ_LICENSE_PERMISSION_REL")
 @Getter

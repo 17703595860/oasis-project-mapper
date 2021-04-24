@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzSiteAddArtMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzSiteAddArt">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="TZ_TXT1" jdbcType="VARCHAR" property="tzTxt1" />
+    <result column="TZ_TXT2" jdbcType="VARCHAR" property="tzTxt2" />
+    <result column="TZ_TXT3" jdbcType="VARCHAR" property="tzTxt3" />
+    <result column="TZ_TXT4" jdbcType="VARCHAR" property="tzTxt4" />
+    <result column="TZ_DATE1" jdbcType="DATE" property="tzDate1" />
+    <result column="TZ_DATE2" jdbcType="DATE" property="tzDate2" />
+    <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+    <result column="TZ_LONG1" jdbcType="LONGVARCHAR" property="tzLong1" />
+    <result column="TZ_LONG2" jdbcType="LONGVARCHAR" property="tzLong2" />
+    <result column="TZ_LONG3" jdbcType="LONGVARCHAR" property="tzLong3" />
+  </resultMap>
+</mapper>

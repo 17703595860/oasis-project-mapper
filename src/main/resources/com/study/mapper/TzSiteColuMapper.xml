@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzSiteColuMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzSiteColu">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="SITE_ID" jdbcType="VARCHAR" property="siteId" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="COLU_TYPE" jdbcType="VARCHAR" property="coluType" />
+    <result column="COLU_ENABLE" jdbcType="VARCHAR" property="coluEnable" />
+    <result column="COLE_PATH" jdbcType="VARCHAR" property="colePath" />
+    <result column="TEMP_ID" jdbcType="VARCHAR" property="tempId" />
+    <result column="ART_TYPE" jdbcType="VARCHAR" property="artType" />
+    <result column="F_COLU_ID" jdbcType="VARCHAR" property="fColuId" />
+    <result column="COLU_LEVEL" jdbcType="INTEGER" property="coluLevel" />
+    <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+  </resultMap>
+</mapper>

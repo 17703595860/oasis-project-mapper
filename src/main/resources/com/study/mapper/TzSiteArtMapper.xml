@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzSiteArtMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzSiteArt">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="SITE_ID" jdbcType="VARCHAR" property="siteId" />
+    <result column="ART_TITLE" jdbcType="VARCHAR" property="artTitle" />
+    <result column="ART_TITLE_STYLE" jdbcType="VARCHAR" property="artTitleStyle" />
+    <result column="ART_SHORTTITLE" jdbcType="VARCHAR" property="artShorttitle" />
+    <result column="SUBHEAD" jdbcType="VARCHAR" property="subhead" />
+    <result column="ART_ADD_TYPE" jdbcType="VARCHAR" property="artAddType" />
+    <result column="ART_TYPE" jdbcType="VARCHAR" property="artType" />
+    <result column="START_DATE" jdbcType="DATE" property="startDate" />
+    <result column="START_TIME" jdbcType="TIME" property="startTime" />
+    <result column="END_DATE" jdbcType="DATE" property="endDate" />
+    <result column="END_TIME" jdbcType="TIME" property="endTime" />
+    <result column="OUT_ART_URL" jdbcType="VARCHAR" property="outArtUrl" />
+    <result column="METADESC" jdbcType="VARCHAR" property="metadesc" />
+    <result column="ART_EDITTYPE" jdbcType="VARCHAR" property="artEdittype" />
+    <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />
+    <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
+    <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
+    <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
+    <result column="ART_CONENT" jdbcType="LONGVARCHAR" property="artConent" />
+    <result column="METAKEYS" jdbcType="LONGVARCHAR" property="metakeys" />
+    <result column="ABOUT" jdbcType="LONGVARCHAR" property="about" />
+  </resultMap>
+</mapper>

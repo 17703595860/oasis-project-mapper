@@ -1,6 +1,7 @@
-package com.study.mapper;
+package com.study.AA_Utils;
 
 import com.study.entity.*;
+import com.study.mapper.*;
 import com.study.utils.ColumnMetaData;
 import com.study.utils.DatabaseUtil;
 import com.study.utils.medadata.FilterDfn;
@@ -9,7 +10,6 @@ import com.study.utils.medadata.Bm;
 import com.study.utils.medadata.Link;
 import com.study.utils.medadata.Prompt;
 import com.study.utils.medadata.Transform;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,10 +30,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
- * @Classname PageModule
- * @Description
- * @Date 2021/4/22 12:12
- * @Created by helinhai
+ * 根据一些参数
+ *  生成 元数据 消息集合 权限 prompt filter
+ *  不生成 转换值，需要提前插入
+ *  不生成菜单，需要自己插入
  */
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -355,12 +355,13 @@ public class MetadataModule {
               }
               tzFilterfldOperatorMapper.insertSelective(tzFilterfldOperator);
             }
+            filterFldOperatorIdA += 10;
           }
         }
 
       }
-      filterFldIdPre += 100;
-      filterFldOperatorIdPre += 100;
+      filterFldIdA += 20;
+      filterFldOperatorIdA += 100;
     }
 
   }
@@ -381,7 +382,7 @@ public class MetadataModule {
               , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
       tzPermissionMapper.insertSelective(tzPermission);
     }
-    permissionIdA += 10;
+    permissionIdA += 20;
     if (!CollectionUtils.isEmpty(bm.getLinkList())) {
       for (Link link : bm.getLinkList()) {
         for (Map.Entry<String, String> entry : link.getPermission().entrySet()) {
@@ -389,7 +390,7 @@ public class MetadataModule {
                   , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
           tzPermissionMapper.insertSelective(tzPermission);
         }
-        permissionIdA += 10;
+        permissionIdA += 20;
       }
     }
 
@@ -429,9 +430,9 @@ public class MetadataModule {
       TzMessageInfo tzMessageInfo2 = new TzMessageInfo(nextMessageInfId(), tzMessageCollection.getId(), "ENG", "CreatedByName", be.getBeName() + "." + "CreatedByName", "CreatedByName", "Y", 1, admin, date, admin, date);
       tzMessageInfoMapper.insertSelective(tzMessageInfo1);
       tzMessageInfoMapper.insertSelective(tzMessageInfo2);
-      messageInfIdA += 100;
+      messageInfIdA += 50;
     }
-    messageIdA += 100;
+    messageIdA += 50;
 
   }
 
@@ -487,8 +488,8 @@ public class MetadataModule {
       TzBmentity tzBmentity1 = new TzBmentity(nextBmBeId(), bm.getBmId(), link.getName().split("/")[1], link.getName(), "Y", null, 1, admin, date, admin, date);
       tzBmentityMapper.insertSelective(tzBmentity1);
     }
-    bmBeIdA += 100;
-    linkIdA += 100;
+    bmBeIdA += 20;
+    linkIdA += 20;
   }
 
   private void addFieldJoin(List<Be> beList) throws SQLException {
@@ -507,7 +508,7 @@ public class MetadataModule {
         tzField.setPrecNum(coldata.getNumberLen());
         tzField.setScale(coldata.getScaleLen());
         tzField.setRequired(getColRequired(coldata));
-        tzField.setControlType(getControlType(coldata));
+        tzField.setControlType(getControlType(coldata, be));
         // 提前添加好的转换值添加
         List<Transform> transformList = be.getTransformList();
         if (!CollectionUtils.isEmpty(transformList)) {
@@ -526,9 +527,9 @@ public class MetadataModule {
       }
       addSystemField(be);
 
-      fieldIdA += 100;
-      joinIdA += 100;
-      joinSpecIdA += 100;
+      fieldIdA += 20;
+      joinIdA += 20;
+      joinSpecIdA += 20;
       if (!CollectionUtils.isEmpty(be.getZBeList())) {
         addFieldJoin(be.getZBeList());
       }
@@ -566,7 +567,7 @@ public class MetadataModule {
 
   }
 
-  private String getControlType(ColumnMetaData coldata) {
+  private String getControlType(ColumnMetaData coldata, Be be) {
     switch (coldata.getColType()) {
       case "TINYINT":
       case "SMALLINT":

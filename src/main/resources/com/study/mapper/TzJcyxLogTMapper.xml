@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.TzJcyxLogTMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzJcyxLogT">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="TZ_JG_ID" jdbcType="VARCHAR" property="tzJgId" />
+    <id column="TZ_JCSL_ID" jdbcType="BIGINT" property="tzJcslId" />
+    <id column="TZ_RZ_LSH" jdbcType="BIGINT" property="tzRzLsh" />
+    <result column="TZ_RZ_JB" jdbcType="VARCHAR" property="tzRzJb" />
+    <result column="TZ_RZ_DTTM" jdbcType="TIMESTAMP" property="tzRzDttm" />
+    <result column="TZ_RZ_NR" jdbcType="VARCHAR" property="tzRzNr" />
+  </resultMap>
+</mapper>

@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
-* Created by Mybatis Generator 2021/04/24
+* Created by Mybatis Generator 2021/04/25
 */
 @Table(name = "TZ_COLU_ART")
 @Getter
@@ -26,7 +26,7 @@ public class TzColuArt {
     private String id;
 
     /**
-     * 机构编号,站点表外键
+     * 所属站点,站点表外键
      */
     @Column(name = "SITE_ID")
     private String siteId;
@@ -38,7 +38,7 @@ public class TzColuArt {
     private String coluId;
 
     /**
-     * 内容ID,内容表外键
+     * 内容,内容表外键
      */
     @Column(name = "ART_ID")
     private String artId;
@@ -92,12 +92,10 @@ public class TzColuArt {
     private String pubDep;
 
     /**
-     * 是否静态化,A:静态化B:不静态化
-如果有访问限制，只能是B
-如果是A那么才有STATIC_NAME输入框
+     * 是否静态化,A:静态化B:不静态化 如果有访问限制，只能是B 如果是A那么才有STATIC_NAME输入框
      */
     @Column(name = "STATIC_FLAG")
-    private Integer staticFlag;
+    private String staticFlag;
 
     /**
      * 访问限制,A:无限制B:指定群组

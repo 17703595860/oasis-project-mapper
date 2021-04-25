@@ -8,6 +8,7 @@ import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.internal.DefaultShellCallback;
 
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,11 @@ public class Generator {
         for (String warning : warnings) {
             System.out.println(warning);
         }
+    }
+
+    @Test
+    public void test(){
+        System.out.println(Number.class.isAssignableFrom(Number.class));
     }
 
 }

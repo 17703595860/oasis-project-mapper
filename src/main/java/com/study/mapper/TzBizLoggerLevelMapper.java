@@ -2,9 +2,7 @@ package com.study.mapper;
 
 import com.study.entity.TzBizLoggerLevel;
 import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.common.ids.SelectByIdsMapper;
 
-/**
-* Created by Mybatis Generator 2021/04/24
-*/
-public interface TzBizLoggerLevelMapper extends Mapper<TzBizLoggerLevel> {
+public interface TzBizLoggerLevelMapper extends Mapper<TzBizLoggerLevel>, SelectByIdsMapper<TzBizLoggerLevel> {
 }

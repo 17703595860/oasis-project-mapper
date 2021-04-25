@@ -1,0 +1,88 @@
+delete from TZ_FILTERFLD_OPERATOR where FILTER_FIELD_ID in (select ID from TZ_FILTER_FLD where FILTER_ID in ('cmsFilter000000001', 'cmsFilter000000002', 'cmsFilter000000003'));
+delete from TZ_FILTER_FLD where FILTER_ID in ('cmsFilter000000001', 'cmsFilter000000002', 'cmsFilter000000003');
+delete from TZ_FILTER_DFN where ID in ('cmsFilter000000001', 'cmsFilter000000002', 'cmsFilter000000003');
+
+INSERT INTO `TZ_FILTER_DFN`(`ID`, `BE_ID`, `NAME`, `RESULT_MAX_NUM`, `ADVANCE_MODEL`, `COMMENTS`, `ACTIVE_FLG`, `MODIFICATION_NUM`) VALUES
+  ('cmsFilter000000001', 'cmsBE0000000000001', 'TZOrgSiteFilter', 0, 'N', null, 'Y', 1),
+  ('cmsFilter000000002', 'cmsBE0000000000002', 'TZSiteColuFilter', 0, 'N', null, 'Y', 1),
+  ('cmsFilter000000003', 'cmsBE0000000000003', 'TZSiteTempFilter', 0, 'N', null, 'Y', 1)
+;
+
+INSERT INTO `TZ_FILTER_FLD`(`ID`, `FILTER_ID`, `FIELD_ID`, `FIELD_DESC`, `SEQ`, `CONTROL_TYPE`, `TRANSFORM_CODE`, `PT_BENAME`, `PT_DEF_ID`, `FLD_READONLY`, `FLD_HIDE`, `FLD_ISDOWN`, `FIELD_TAG_CODE`, `COMMENTS`, `ACTIVE_FLG`, `MODIFICATION_NUM`) VALUES
+  ('cmsFltFld000000001', 'cmsFilter000000001', 'cmsField0000000003', null, 1, 'string', null, null, null, 'N', 'N', 'N', 'TZOrgSite.Name', null, 'Y', 1),
+  ('cmsFltFld000000002', 'cmsFilter000000001', 'cmsField0000000004', null, 2, 'string', null, null, null, 'N', 'N', 'N', 'TZOrgSite.SiteName', null, 'Y', 1),
+  ('cmsFltFld000000003', 'cmsFilter000000001', 'cmsField0000000005', null, 3, 'transform', 'SITE_TYPE', null, null, 'N', 'N', 'Y', 'TZOrgSite.SiteType', null, 'Y', 1),
+  ('cmsFltFld000000004', 'cmsFilter000000001', 'cmsField0000000006', null, 4, 'string', null, null, null, 'N', 'N', 'N', 'TZOrgSite.SiteDesc', null, 'Y', 1),
+  ('cmsFltFld000000005', 'cmsFilter000000001', 'cmsField0000000007', null, 5, 'transform', 'SITE_ENABLE', null, null, 'N', 'N', 'Y', 'TZOrgSite.SiteEnable', null, 'Y', 1),
+  ('cmsFltFld000000026', 'cmsFilter000000002', 'cmsField0000000041', null, 1, 'string', null, null, null, 'N', 'N', 'N', 'TZSiteColu.Name', null, 'Y', 1),
+  ('cmsFltFld000000027', 'cmsFilter000000002', 'cmsField0000000042', null, 2, 'transform', 'SITE_COLU_TYPE', null, null, 'N', 'N', 'Y', 'TZSiteColu.ColuType', null, 'Y', 1),
+  ('cmsFltFld000000028', 'cmsFilter000000002', 'cmsField0000000043', null, 3, 'transform', 'SITE_COLU_ENABLE', null, null, 'N', 'N', 'Y', 'TZSiteColu.ColuEnable', null, 'Y', 1),
+  ('cmsFltFld000000049', 'cmsFilter000000003', 'cmsField0000000078', null, 1, 'string', null, null, null, 'N', 'N', 'N', 'TZSiteTemp.Name', null, 'Y', 1),
+  ('cmsFltFld000000050', 'cmsFilter000000003', 'cmsField0000000079', null, 2, 'transform', 'SITE_TEMP_TYPE', null, null, 'N', 'N', 'Y', 'TZSiteTemp.TempType', null, 'Y', 1),
+  ('cmsFltFld000000051', 'cmsFilter000000003', 'cmsField0000000080', null, 3, 'transform', 'SITE_TEMP_ENABLE', null, null, 'N', 'N', 'Y', 'TZSiteTemp.TempEnable', null, 'Y', 1)
+;
+
+INSERT INTO `TZ_FILTERFLD_OPERATOR`(`ID`, `FILTER_FIELD_ID`, `OPERTOR`, `IS_ACTIVE`, `IS_DEF_OPRT`, `COMMENTS`, `MODIFICATION_NUM`) VALUES
+  ('cmsFldOpr000000001', 'cmsFltFld000000001', '07', 'Y', 'Y', null, 1),
+  ('cmsFldOpr000000002', 'cmsFltFld000000001', '01', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000003', 'cmsFltFld000000001', '02', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000004', 'cmsFltFld000000001', '08', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000005', 'cmsFltFld000000001', '09', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000016', 'cmsFltFld000000002', '07', 'Y', 'Y', null, 1),
+  ('cmsFldOpr000000017', 'cmsFltFld000000002', '01', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000018', 'cmsFltFld000000002', '02', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000019', 'cmsFltFld000000002', '08', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000020', 'cmsFltFld000000002', '09', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000031', 'cmsFltFld000000003', '07', 'Y', 'Y', null, 1),
+  ('cmsFldOpr000000032', 'cmsFltFld000000003', '01', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000033', 'cmsFltFld000000003', '02', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000034', 'cmsFltFld000000003', '08', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000035', 'cmsFltFld000000003', '09', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000036', 'cmsFltFld000000003', '10', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000047', 'cmsFltFld000000004', '07', 'Y', 'Y', null, 1),
+  ('cmsFldOpr000000048', 'cmsFltFld000000004', '01', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000049', 'cmsFltFld000000004', '02', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000050', 'cmsFltFld000000004', '08', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000051', 'cmsFltFld000000004', '09', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000062', 'cmsFltFld000000005', '07', 'Y', 'Y', null, 1),
+  ('cmsFldOpr000000063', 'cmsFltFld000000005', '01', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000064', 'cmsFltFld000000005', '02', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000065', 'cmsFltFld000000005', '08', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000066', 'cmsFltFld000000005', '09', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000067', 'cmsFltFld000000005', '10', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000178', 'cmsFltFld000000026', '07', 'Y', 'Y', null, 1),
+  ('cmsFldOpr000000179', 'cmsFltFld000000026', '01', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000180', 'cmsFltFld000000026', '02', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000181', 'cmsFltFld000000026', '08', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000182', 'cmsFltFld000000026', '09', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000193', 'cmsFltFld000000027', '07', 'Y', 'Y', null, 1),
+  ('cmsFldOpr000000194', 'cmsFltFld000000027', '01', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000195', 'cmsFltFld000000027', '02', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000196', 'cmsFltFld000000027', '08', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000197', 'cmsFltFld000000027', '09', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000198', 'cmsFltFld000000027', '10', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000209', 'cmsFltFld000000028', '07', 'Y', 'Y', null, 1),
+  ('cmsFldOpr000000210', 'cmsFltFld000000028', '01', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000211', 'cmsFltFld000000028', '02', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000212', 'cmsFltFld000000028', '08', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000213', 'cmsFltFld000000028', '09', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000214', 'cmsFltFld000000028', '10', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000325', 'cmsFltFld000000049', '07', 'Y', 'Y', null, 1),
+  ('cmsFldOpr000000326', 'cmsFltFld000000049', '01', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000327', 'cmsFltFld000000049', '02', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000328', 'cmsFltFld000000049', '08', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000329', 'cmsFltFld000000049', '09', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000340', 'cmsFltFld000000050', '07', 'Y', 'Y', null, 1),
+  ('cmsFldOpr000000341', 'cmsFltFld000000050', '01', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000342', 'cmsFltFld000000050', '02', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000343', 'cmsFltFld000000050', '08', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000344', 'cmsFltFld000000050', '09', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000345', 'cmsFltFld000000050', '10', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000356', 'cmsFltFld000000051', '07', 'Y', 'Y', null, 1),
+  ('cmsFldOpr000000357', 'cmsFltFld000000051', '01', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000358', 'cmsFltFld000000051', '02', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000359', 'cmsFltFld000000051', '08', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000360', 'cmsFltFld000000051', '09', 'Y', 'N', null, 1),
+  ('cmsFldOpr000000361', 'cmsFltFld000000051', '10', 'Y', 'N', null, 1)
+;
+

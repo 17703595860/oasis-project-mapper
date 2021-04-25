@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
-* Created by Mybatis Generator 2021/04/24
+* Created by Mybatis Generator 2021/04/25
 */
 @Table(name = "TZ_SITE_ART")
 @Getter
@@ -26,7 +26,7 @@ public class TzSiteArt {
     private String id;
 
     /**
-     * 机构编号,站点表外键
+     * 所属站点,站点表外键
      */
     @Column(name = "SITE_ID")
     private String siteId;
@@ -58,8 +58,8 @@ public class TzSiteArt {
     /**
      * 内容附加字段类型,内容类型表主键
      */
-    @Column(name = "ART_ADD_TYPE")
-    private String artAddType;
+    @Column(name = "ART_ADD_TYPE_ID")
+    private String artAddTypeId;
 
     /**
      * 内容类型,A:自建文章B:外部引用

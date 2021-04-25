@@ -2,9 +2,7 @@ package com.study.mapper;
 
 import com.study.entity.TzDsDispscheme;
 import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.common.ids.SelectByIdsMapper;
 
-/**
-* Created by Mybatis Generator 2021/04/24
-*/
-public interface TzDsDispschemeMapper extends Mapper<TzDsDispscheme> {
+public interface TzDsDispschemeMapper extends Mapper<TzDsDispscheme>, SelectByIdsMapper<TzDsDispscheme> {
 }

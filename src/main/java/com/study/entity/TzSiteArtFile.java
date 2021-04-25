@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
-* Created by Mybatis Generator 2021/04/24
+* Created by Mybatis Generator 2021/04/25
 */
 @Table(name = "TZ_SITE_ART_FILE")
 @Getter
@@ -26,7 +26,7 @@ public class TzSiteArtFile {
     private String id;
 
     /**
-     * 内容ID
+     * 内容,内容表主键
      */
     @Column(name = "ART_ID")
     private String artId;
@@ -38,7 +38,7 @@ public class TzSiteArtFile {
     private Integer fileSort;
 
     /**
-     * 附件表ID
+     * 附件,附件表主键
      */
     @Column(name = "FILE_ID")
     private String fileId;

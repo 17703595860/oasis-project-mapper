@@ -10,6 +10,7 @@ import com.study.utils.medadata.Bm;
 import com.study.utils.medadata.Link;
 import com.study.utils.medadata.Prompt;
 import com.study.utils.medadata.Transform;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,9 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.Column;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.*;
@@ -136,6 +140,33 @@ public class MetadataModule {
   private Integer filterFldIdA = 1;
   private Integer filterFldOperatorIdA = 1;
 
+  private List<String> beIdInsertList = new ArrayList<>();
+  private List<String> fieldIdInsertList = new ArrayList<>();
+  private List<String> joinIdInsertList = new ArrayList<>();
+  private List<String> joinSpecIdInsertList = new ArrayList<>();
+
+  private List<String> linkIdInsertList = new ArrayList<>();
+  private List<String> bmIdInsertList = new ArrayList<>();
+  private List<String> bmBeldIdInsertList = new ArrayList<>();
+
+  private List<String> msgColIdInsertList = new ArrayList<>();
+  private List<String> msgInfIdInsertList = new ArrayList<>();
+
+  private List<String> permissionGroupIdInsertList = new ArrayList<>();
+  private List<String> permissionIdInsertList = new ArrayList<>();
+
+  private List<String> promptIdInsertList = new ArrayList<>();
+  private List<String> promptFldIdInsertList = new ArrayList<>();
+
+  private List<String> filterDfnIdInsertList = new ArrayList<>();
+  private List<String> filterFldIdInsertList = new ArrayList<>();
+  private List<String> filterFldOprIdInsertList = new ArrayList<>();
+
+  // 是否自定义路径
+  private boolean fileFlag = false;
+  private String descFilePath = "D:/桌面/sql/";
+  private boolean transactionCommit = false;
+
   private String module = "POC";
   private String moduleDesc = "POC模块";
   private Bm bm = new Bm(null, "TZStudent", "TZStudent", new HashMap<String, String>() {{
@@ -199,6 +230,12 @@ public class MetadataModule {
   @Test
   public void addMetadata() {
 
+    if (fileFlag) {
+      if (!new File(descFilePath).exists()) {
+        throw new RuntimeException("sql输入目录不存在");
+      }
+    }
+
     DefaultTransactionDefinition def = new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED);
     def.setName("copyFieldToDisplayFrame");
     TransactionStatus status = transactionManager.getTransaction(def);
@@ -218,12 +255,261 @@ public class MetadataModule {
 
       addfilter();
 
-      transactionManager.commit(status);
+      addFileSql();
+
+      if (transactionCommit) {
+        transactionManager.commit(status);
+      } else {
+        transactionManager.rollback(status);
+      }
     } catch (Exception e) {
       e.printStackTrace();
       transactionManager.rollback(status);
     }
   }
+
+  private void addFileSql() {
+    String srcFilePath = null;
+    if (fileFlag) {
+      srcFilePath = descFilePath;
+    }else {
+      srcFilePath = "src/test/java/com/study/AA_sql/" + module + "/";
+      new File(srcFilePath).mkdirs();
+    }
+    addBeSql(srcFilePath);
+    addBmSql(srcFilePath);
+    addMessageSql(srcFilePath);
+    addPermissionSql(srcFilePath);
+    addPromptSql(srcFilePath);
+    addFilterSql(srcFilePath);
+  }
+
+  private void addFilterSql(String srcFilePath) {
+    String filePath = srcFilePath + "06-FILTERDEFINE.sql";
+    if (new File(filePath).exists()) {
+      new File(filePath).delete();
+    }
+    try(BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+      String filterIdList = StringUtils.join(filterDfnIdInsertList.stream().map(e -> "'" + e +"'").collect(Collectors.toList()), ", ");
+      bw.write("delete from TZ_FILTERFLD_OPERATOR where FILTER_FIELD_ID in (select ID from TZ_FILTER_FLD where FILTER_ID in (" + filterIdList + "));");
+      bw.newLine();
+      bw.write("delete from TZ_FILTER_FLD where FILTER_ID in (" + filterIdList + ");");
+      bw.newLine();
+      bw.write("delete from TZ_FILTER_DFN where ID in (" + filterIdList + ");");
+      bw.newLine();bw.newLine();
+      // 添加filter
+      List<TzFilterDfn> filterDfnList = tzFilterDfnMapper.selectByIds(StringUtils.join(filterDfnIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      List<Map<String, List<String>>> objList = filterDfnList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_FILTER_DFN", bw);
+      // 添加filterFld
+      List<TzFilterFld> filterFldList = tzFilterFldMapper.selectByIds(StringUtils.join(filterFldIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      objList = filterFldList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_FILTER_FLD", bw);
+      // 添加filterFldOpr
+      List<TzFilterfldOperator> filterfldoprlist = tzFilterfldOperatorMapper.selectByIds(StringUtils.join(filterFldOprIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      objList = filterfldoprlist.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_FILTERFLD_OPERATOR", bw);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void addPromptSql(String srcFilePath) {
+    String filePath = srcFilePath + "07-PROMPT.sql";
+    if (new File(filePath).exists()) {
+      new File(filePath).delete();
+    }
+    try(BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+      String promptIdStr = StringUtils.join(promptIdInsertList.stream().map(e -> "'" + e +"'").collect(Collectors.toList()), ", ");
+      bw.write("delete from TZ_PT_FIELD_DEF where PT_DEF_ID in (" + promptIdStr + ");");
+      bw.newLine();
+      bw.write("delete from TZ_PT_DEF where ID in (" + promptIdStr + ");");
+      bw.newLine();bw.newLine();
+      // 添加prompt
+      List<TzPtDef> promptList = tzPtDefMapper.selectByIds(StringUtils.join(promptIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      List<Map<String, List<String>>> objList = promptList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_PT_DEF", bw);
+      // 添加promptFld
+      List<TzPtFieldDef> promptFldList = tzPtFieldDefMapper.selectByIds(StringUtils.join(promptFldIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      objList = promptFldList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_PT_FIELD_DEF", bw);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void addPermissionSql(String srcFilePath) {
+    String filePath = srcFilePath + "04-PERMISSION.sql";
+    if (new File(filePath).exists()) {
+      new File(filePath).delete();
+    }
+    try(BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+      String permissionGoupStr = StringUtils.join(permissionGroupIdInsertList.stream().map(e -> "'" + e +"'").collect(Collectors.toList()), ", ");
+      bw.write("delete from TZ_PERMISSION where GROUP_ID in (" + permissionGoupStr + ");");
+      bw.newLine();
+      bw.write("delete from TZ_PERMISSION_GROUP where ID in (" + permissionGoupStr + ");");
+      bw.newLine();bw.newLine();
+      // 添加permissionGroup
+      List<TzPermissionGroup> permissionGroupList = tzPermissionGroupMapper.selectByIds(StringUtils.join(permissionGroupIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      List<Map<String, List<String>>> objList = permissionGroupList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_PERMISSION_GROUP", bw);
+      // 添加permission
+      List<TzPermission> permissionList = tzPermissionMapper.selectByIds(StringUtils.join(permissionIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      objList = permissionList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_PERMISSION", bw);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void addMessageSql(String srcFilePath) {
+    String filePath = srcFilePath + "09-MESSAGE.sql";
+    if (new File(filePath).exists()) {
+      new File(filePath).delete();
+    }
+    try(BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+      String msgColIdStr = StringUtils.join(msgColIdInsertList.stream().map(e -> "'" + e +"'").collect(Collectors.toList()), ", ");
+      bw.write("delete from TZ_MESSAGE_INFO where COLLECTION_ID in (" + msgColIdStr + ");");
+      bw.newLine();
+      bw.write("delete from TZ_MESSAGE_COLLECTION where ID in (" + msgColIdStr + ");");
+      bw.newLine();bw.newLine();
+      // 添加msgCol
+      List<TzMessageCollection> msgColList = tzMessageCollectionMapper.selectByIds(StringUtils.join(msgColIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      List<Map<String, List<String>>> objList = msgColList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_MESSAGE_COLLECTION", bw);
+      // 添加msgInf
+      List<TzMessageInfo> msgInfList = tzMessageInfoMapper.selectByIds(StringUtils.join(msgInfIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      objList = msgInfList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_MESSAGE_INFO", bw);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void addBmSql(String srcFilePath) {
+    String filePath = srcFilePath + "01-METADATA.sql";
+    try(BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+      // 添加link
+      List<TzLink> linkList = tzLinkMapper.selectByIds(StringUtils.join(linkIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      List<Map<String, List<String>>> objList = linkList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_LINK", bw);
+      // 添加bm
+      List<TzBusmodule> bmList = tzBusmoduleMapper.selectByIds(StringUtils.join(bmIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      objList = bmList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_BUSMODULE", bw);
+      // 添加bmbe
+      List<TzBmentity> bmbeList = tzBmentityMapper.selectByIds(StringUtils.join(bmBeldIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      objList = bmbeList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_BMENTITY", bw);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void addBeSql(String srcFilePath) {
+    String filePath = srcFilePath + "01-METADATA.sql";
+    if (new File(filePath).exists()) {
+      new File(filePath).delete();
+    }
+    try(BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+      bw.write("# 删除" + module + "元数据配置");
+      bw.newLine();
+      bw.write("delete from TZ_LINK where MODULE = '" + module + "';");
+      bw.newLine();
+      bw.write("--");
+      bw.newLine();
+      bw.write("delete from TZ_JOIN_SPEC where JOIN_ID in (select ID from TZ_JOIN where BUSENTITY_ID in (select ID from TZ_BUSENTITY where MODULE = '" + module + "'));");
+      bw.newLine();
+      bw.write("delete from TZ_JOIN_CONSTRNT where JOIN_ID in (select ID from TZ_JOIN where BUSENTITY_ID in (select ID from TZ_BUSENTITY where MODULE = '" + module + "'));");
+      bw.newLine();
+      bw.write("delete from TZ_JOIN where BUSENTITY_ID in (select ID from TZ_BUSENTITY where MODULE = '" + module + "');");
+      bw.newLine();
+      bw.write("delete from TZ_FIELD where BUSENTITY_ID in (select ID from TZ_BUSENTITY where MODULE = '" + module + "');");
+      bw.newLine();
+      bw.write("delete from TZ_BUSENTITY where MODULE = '" + module + "';");
+      bw.newLine();
+      bw.write("--");
+      bw.newLine();
+      bw.write("delete from TZ_BMENTITY where BUSMODULE_ID in (select ID from TZ_BUSMODULE where MODULE = '" + module + "');");
+      bw.newLine();
+      bw.write("delete from TZ_BUSMODULE where MODULE = '" + module + "';");
+      bw.newLine();bw.newLine();
+      // 添加be
+      List<TzBusentity> beList = tzBusentityMapper.selectByIds(StringUtils.join(beIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      List<Map<String, List<String>>> objList = beList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_BUSENTITY", bw);
+      // 添加field
+      List<TzField> fieldList = tzFieldMapper.selectByIds(StringUtils.join(fieldIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      objList = fieldList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_FIELD", bw);
+      // 添加join
+      List<TzJoin> joinList = tzJoinMapper.selectByIds(StringUtils.join(joinIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      objList = joinList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_JOIN", bw);
+      // 添加joinSpec
+      List<TzJoinSpec> joinSpecList = tzJoinSpecMapper.selectByIds(StringUtils.join(joinSpecIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+      objList = joinSpecList.stream().map(this::getColAndVal).collect(Collectors.toList());
+      createSql(objList, "TZ_JOIN_SPEC", bw);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @SneakyThrows
+  private void createSql(List<Map<String, List<String>>> objList, String tableName, BufferedWriter bw) {
+    if (CollectionUtils.isEmpty(objList)) {
+      return;
+    }
+    bw.write("INSERT INTO `" + tableName + "`(" + StringUtils.join(objList.get(0).get("col"), ", ") + ") VALUES");
+    bw.newLine();
+    for (int i = 0; i < objList.size(); i++) {
+      if (i == objList.size() - 1) {
+        bw.write("  (" + StringUtils.join(objList.get(i).get("val"), ", ") + ")");
+      } else {
+        bw.write("  (" + StringUtils.join(objList.get(i).get("val"), ", ") + "),");
+      }
+      bw.newLine();
+    }
+    bw.write(";");
+    bw.newLine();bw.newLine();
+  }
+
+  @SneakyThrows
+  private Map<String, List<String>> getColAndVal(Object obj) {
+    ArrayList<String> colList = new ArrayList<>();
+    ArrayList<String> valList = new ArrayList<>();
+    Class<?> zClass = obj.getClass();
+    Field[] fields = zClass.getDeclaredFields();
+    for (Field field : fields) {
+      field.setAccessible(true);
+      String name = field.getName();
+      if (StringUtils.equalsAny(name, "createdBy", "created", "lastUpdBy", "lastUpd")) {
+        continue;
+      }
+      String colName = field.getAnnotation(Column.class).name();
+      String valStr = null;
+      Object valObj = field.get(obj);
+      if (valObj == null) {
+        valStr = "null";
+      } else {
+        valStr = valObj.toString();
+        if (Date.class.isAssignableFrom(field.getType())) {
+          throw new RuntimeException("有日期时间类型");
+        }
+        if (String.class.isAssignableFrom(field.getType())) {
+          valStr = "'" + valStr + "'";
+        }
+      }
+      colList.add("`" + colName + "`");
+      valList.add(valStr);
+    }
+    Map<String, List<String>> result = new HashMap<String, List<String>>() {{
+      put("col", colList);
+      put("val", valList);
+    }};
+    return result;
+  }
+
 
   private void addPrompt() {
     List<Be> tempBelist = new ArrayList<>();
@@ -379,7 +665,7 @@ public class MetadataModule {
     Map<String, String> permission = bm.getPermission();
     for (Map.Entry<String, String> entry : permission.entrySet()) {
       TzPermission tzPermission = new TzPermission(nextPermissionId(), tzPermissionGroup.getId(), bm.getBmName() + ":" + bm.getPriBeName() + ":" + entry.getValue(), bm.getBmName() + ":" + bm.getPriBeName() + ":" + entry.getKey()
-              , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
+          , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
       tzPermissionMapper.insertSelective(tzPermission);
     }
     permissionIdA += 20;
@@ -387,7 +673,7 @@ public class MetadataModule {
       for (Link link : bm.getLinkList()) {
         for (Map.Entry<String, String> entry : link.getPermission().entrySet()) {
           TzPermission tzPermission = new TzPermission(nextPermissionId(), tzPermissionGroup.getId(), bm.getBmName() + ":" + link.getName().split("/")[0] + ":" + link.getName().split("/")[1] + ":" + entry.getValue(), bm.getBmName() + ":" + link.getName().split("/")[0] + ":" + link.getName().split("/")[1] + ":" + entry.getKey()
-                  , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
+              , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
           tzPermissionMapper.insertSelective(tzPermission);
         }
         permissionIdA += 20;
@@ -501,7 +787,7 @@ public class MetadataModule {
         }
         String fieldName = getFieldName(coldata.getColName(), be);
         TzField tzField = new TzField(nextFieldId(), fieldName, be.getBeId(), null, coldata.getColName(), null, null, null, null, null, null, null, "N", "Y"
-          , null, 1, admin, date, admin, date, null, null, null);
+            , null, 1, admin, date, admin, date, null, null, null);
         String type = getColType(coldata);
         tzField.setDataType(type);
         tzField.setTextlen(coldata.getTextLen());
@@ -544,19 +830,19 @@ public class MetadataModule {
     tzJoinSpecMapper.insert(tzJoinSpec);
 
     TzField tzFieldModificationNumber = new TzField(nextFieldId(), "ModificationNumber", be.getBeId(), null, "MODIFICATION_NUM", null, null, "Number", null, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "string", null, null);
+        , null, 1, admin, date, admin, date, "string", null, null);
     TzField tzFieldCreated = new TzField(nextFieldId(), "Created", be.getBeId(), null, "CREATED", null, null, "DateTime", null, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "datetime", null, null);
+        , null, 1, admin, date, admin, date, "datetime", null, null);
     TzField tzFieldCreatedBy = new TzField(nextFieldId(), "CreatedBy", be.getBeId(), null, "CREATED_BY", null, null, "Varchar", 18, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "String", null, null);
+        , null, 1, admin, date, admin, date, "String", null, null);
 
     TzField tzFieldCreatedByName = new TzField(nextFieldId(), "CreatedByName", be.getBeId(), "ByName","USERNAME", null, null, "Varchar", 255, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "String", null, null);
+        , null, 1, admin, date, admin, date, "String", null, null);
 
     TzField tzFieldlastUpd = new TzField(nextFieldId(), "LastUpd", be.getBeId(), null, "LAST_UPD", null, null, "DateTime", null, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "datetime", null, null);
+        , null, 1, admin, date, admin, date, "datetime", null, null);
     TzField tzFieldlastUpdBy = new TzField(nextFieldId(), "LastUpdBy", be.getBeId(), null, "LAST_UPD_BY", null, null, "Varchar", 18, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "String", null, null);
+        , null, 1, admin, date, admin, date, "String", null, null);
 
     tzFieldMapper.insertSelective(tzFieldModificationNumber);
     tzFieldMapper.insertSelective(tzFieldCreated);
@@ -686,52 +972,89 @@ public class MetadataModule {
 
 
   private String nextBeId() {
-    return beIdPre + String.format("%0" + (idNum-beIdPre.length()) + "d", beIdA++);
+    String beId = beIdPre + String.format("%0" + (idNum - beIdPre.length()) + "d", beIdA++);
+    beIdInsertList.add(beId);
+    return beId;
   }
   private String nextFieldId() {
-    return fieldIdPre + String.format("%0" + (idNum-fieldIdPre.length()) + "d", fieldIdA++);
+    String fieldId = fieldIdPre + String.format("%0" + (idNum - fieldIdPre.length()) + "d", fieldIdA++);
+    fieldIdInsertList.add(fieldId);
+    return fieldId;
   }
   private String nextJoinId() {
-    return joinIdPre + String.format("%0" + (idNum-joinIdPre.length()) + "d", joinIdA++);
+    String joinId = joinIdPre + String.format("%0" + (idNum - joinIdPre.length()) + "d", joinIdA++);
+    joinIdInsertList.add(joinId);
+    return joinId;
   }
   private String nextJoinSpecId() {
-    return joinSpecIdPre + String.format("%0" + (idNum-joinSpecIdPre.length()) + "d", joinSpecIdA++);
+    String joinSpecId = joinSpecIdPre + String.format("%0" + (idNum - joinSpecIdPre.length()) + "d", joinSpecIdA++);
+    joinSpecIdInsertList.add(joinSpecId);
+    return joinSpecId;
   }
+
   private String nextBmId() {
-    return bmIdPre + String.format("%0" + (idNum-bmIdPre.length()) + "d", bmIdA++);
+    String bmId = bmIdPre + String.format("%0" + (idNum - bmIdPre.length()) + "d", bmIdA++);
+    bmIdInsertList.add(bmId);
+    return bmId;
   }
   private String nextBmBeId() {
-    return bmBeIdPre + String.format("%0" + (idNum-bmBeIdPre.length()) + "d", bmBeIdA++);
+    String bmbeId = bmBeIdPre + String.format("%0" + (idNum - bmBeIdPre.length()) + "d", bmBeIdA++);
+    bmBeldIdInsertList.add(bmbeId);
+    return bmbeId;
   }
   private String nextLinkId() {
-    return linkIdPre + String.format("%0" + (idNum-linkIdPre.length()) + "d", linkIdA++);
+    String linkId = linkIdPre + String.format("%0" + (idNum - linkIdPre.length()) + "d", linkIdA++);
+    linkIdInsertList.add(linkId);
+    return linkId;
   }
+
   private String nextMessageId() {
-    return messageIdPre + String.format("%0" + (idNum-messageIdPre.length()) + "d", messageIdA++);
+    String msgColId = messageIdPre + String.format("%0" + (idNum - messageIdPre.length()) + "d", messageIdA++);
+    msgColIdInsertList.add(msgColId);
+    return msgColId;
   }
   private String nextMessageInfId() {
-    return messageInfIdPre + String.format("%0" + (idNum-messageInfIdPre.length()) + "d", messageInfIdA++);
+    String msgInfId = messageInfIdPre + String.format("%0" + (idNum - messageInfIdPre.length()) + "d", messageInfIdA++);
+    msgInfIdInsertList.add(msgInfId);
+    return msgInfId;
   }
+
   private String nextPermissionGroupId() {
-    return permissionGroupIdPre + String.format("%0" + (idNum-permissionGroupIdPre.length()) + "d", permissionGroupIdA++);
+    String permissionGroupId = permissionGroupIdPre + String.format("%0" + (idNum - permissionGroupIdPre.length()) + "d", permissionGroupIdA++);
+    permissionGroupIdInsertList.add(permissionGroupId);
+    return permissionGroupId;
   }
   private String nextPermissionId() {
-    return permissionIdPre + String.format("%0" + (idNum-permissionIdPre.length()) + "d", permissionIdA++);
+    String permissionId = permissionIdPre + String.format("%0" + (idNum - permissionIdPre.length()) + "d", permissionIdA++);
+    permissionIdInsertList.add(permissionId);
+    return permissionId;
   }
+
   private String nextPromptId() {
-    return promptIdPre + String.format("%0" + (idNum-promptIdPre.length()) + "d", promptIdA++);
+    String promptId = promptIdPre + String.format("%0" + (idNum - promptIdPre.length()) + "d", promptIdA++);
+    promptIdInsertList.add(promptId);
+    return promptId;
   }
   private String nextPromptFieldId() {
-    return promptFieldIdPre + String.format("%0" + (idNum-promptFieldIdPre.length()) + "d", promptFieldIdA++);
+    String promptFldId = promptFieldIdPre + String.format("%0" + (idNum - promptFieldIdPre.length()) + "d", promptFieldIdA++);
+    promptFldIdInsertList.add(promptFldId);
+    return promptFldId;
   }
+
   private String nextFilterDfnId() {
-    return filterDfnIdPre + String.format("%0" + (idNum-filterDfnIdPre.length()) + "d", filterDfnIdA++);
+    String filterDfnId = filterDfnIdPre + String.format("%0" + (idNum - filterDfnIdPre.length()) + "d", filterDfnIdA++);
+    filterDfnIdInsertList.add(filterDfnId);
+    return filterDfnId;
   }
   private String nextFilterFldId() {
-    return filterFldIdPre + String.format("%0" + (idNum-filterFldIdPre.length()) + "d", filterFldIdA++);
+    String filterFldId = filterFldIdPre + String.format("%0" + (idNum - filterFldIdPre.length()) + "d", filterFldIdA++);
+    filterFldIdInsertList.add(filterFldId);
+    return filterFldId;
   }
   private String nextFilterFldOperatorId() {
-    return filterFldOperatorIdPre + String.format("%0" + (idNum-filterFldOperatorIdPre.length()) + "d", filterFldOperatorIdA++);
+    String filterFldOprId = filterFldOperatorIdPre + String.format("%0" + (idNum - filterFldOperatorIdPre.length()) + "d", filterFldOperatorIdA++);
+    filterFldOprIdInsertList.add(filterFldOprId);
+    return filterFldOprId;
   }
 
   @Test
@@ -745,6 +1068,11 @@ public class MetadataModule {
     String s = "asasasasasas";
     System.out.println(s.replace("a", "L"));
     System.out.println(StringUtils.replaceOnce(s, "a", "L"));
+  }
+
+  @Test
+  public void testjdbc() {
+    tzBusentityMapper.selectAll();
   }
 
 }

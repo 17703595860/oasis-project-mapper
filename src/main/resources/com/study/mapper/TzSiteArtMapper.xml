@@ -11,7 +11,7 @@
     <result column="ART_TITLE_STYLE" jdbcType="VARCHAR" property="artTitleStyle" />
     <result column="ART_SHORTTITLE" jdbcType="VARCHAR" property="artShorttitle" />
     <result column="SUBHEAD" jdbcType="VARCHAR" property="subhead" />
-    <result column="ART_ADD_TYPE" jdbcType="VARCHAR" property="artAddType" />
+    <result column="ART_ADD_TYPE_ID" jdbcType="VARCHAR" property="artAddTypeId" />
     <result column="ART_TYPE" jdbcType="VARCHAR" property="artType" />
     <result column="START_DATE" jdbcType="DATE" property="startDate" />
     <result column="START_TIME" jdbcType="TIME" property="startTime" />

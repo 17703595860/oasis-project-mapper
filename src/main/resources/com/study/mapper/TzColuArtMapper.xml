@@ -17,7 +17,7 @@
     <result column="MAX_ZD_SEQ" jdbcType="INTEGER" property="maxZdSeq" />
     <result column="PUBLISHER" jdbcType="VARCHAR" property="publisher" />
     <result column="PUB_DEP" jdbcType="VARCHAR" property="pubDep" />
-    <result column="STATIC_FLAG" jdbcType="INTEGER" property="staticFlag" />
+    <result column="STATIC_FLAG" jdbcType="VARCHAR" property="staticFlag" />
     <result column="PROJECT_LIMIT" jdbcType="VARCHAR" property="projectLimit" />
     <result column="STATIC_NAME" jdbcType="VARCHAR" property="staticName" />
     <result column="STATIC_AOTO_NAME" jdbcType="VARCHAR" property="staticAotoName" />

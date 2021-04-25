@@ -2,9 +2,7 @@ package com.study.mapper;
 
 import com.study.entity.TzDataArgument;
 import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.common.ids.SelectByIdsMapper;
 
-/**
-* Created by Mybatis Generator 2021/04/24
-*/
-public interface TzDataArgumentMapper extends Mapper<TzDataArgument> {
+public interface TzDataArgumentMapper extends Mapper<TzDataArgument>, SelectByIdsMapper<TzDataArgument> {
 }

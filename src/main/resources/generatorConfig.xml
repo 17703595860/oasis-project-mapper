@@ -4,7 +4,7 @@
 
 <generatorConfiguration>
 
-    <properties resource="jdbc.properties"/>
+    <properties resource="application.properties"/>
 
     <!-- targetRuntime="MyBatis3Simple":生成简单版的CRUD，不带example，使用通用mapper的example -->
     <!--  defaultModelType="hierarchical" blob字段用的模式
@@ -17,7 +17,8 @@
 
         <!-- 通用mapper插件 -->
         <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
-            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>
+<!--            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>-->
+            <property name="mappers" value="tk.mybatis.mapper.common.Mapper,tk.mybatis.mapper.common.ids.SelectByIdsMapper"/>
             <property name="caseSensitive" value="true"/>
         </plugin>
         <!-- lombok -->

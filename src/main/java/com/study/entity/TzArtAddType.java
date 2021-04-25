@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
-* Created by Mybatis Generator 2021/04/24
+* Created by Mybatis Generator 2021/04/25
 */
 @Table(name = "TZ_ART_ADD_TYPE")
 @Getter
@@ -26,28 +26,10 @@ public class TzArtAddType {
     private String id;
 
     /**
-     * 内容类型表外键
+     * 名称,唯一
      */
-    @Column(name = "TYPE_ID")
-    private String typeId;
-
-    /**
-     * 类型的值,站点内容附加内容表里面附加字段
-     */
-    @Column(name = "FIELD_VALUE")
-    private String fieldValue;
-
-    /**
-     * 类型的描述
-     */
-    @Column(name = "FIELD_DESC")
-    private String fieldDesc;
-
-    /**
-     * 显示的排序
-     */
-    @Column(name = "SEQ")
-    private Integer seq;
+    @Column(name = "NAME")
+    private String name;
 
     /**
      * 是否启用,Y：启用N：不启用

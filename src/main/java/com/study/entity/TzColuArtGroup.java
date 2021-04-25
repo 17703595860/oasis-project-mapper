@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
-* Created by Mybatis Generator 2021/04/24
+* Created by Mybatis Generator 2021/04/25
 */
 @Table(name = "TZ_COLU_ART_GROUP")
 @Getter
@@ -26,13 +26,13 @@ public class TzColuArtGroup {
     private String id;
 
     /**
-     * 栏目内容ID
+     * 栏目内容,栏目内容ID
      */
     @Column(name = "COLU_ART_ID")
     private String coluArtId;
 
     /**
-     * 群组ID
+     * 群组,群组ID
      */
     @Column(name = "GROUP_ID")
     private String groupId;

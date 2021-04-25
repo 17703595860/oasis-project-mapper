@@ -2,9 +2,7 @@ package com.study.mapper;
 
 import com.study.entity.TzLicensePermissionRel;
 import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.common.ids.SelectByIdsMapper;
 
-/**
-* Created by Mybatis Generator 2021/04/24
-*/
-public interface TzLicensePermissionRelMapper extends Mapper<TzLicensePermissionRel> {
+public interface TzLicensePermissionRelMapper extends Mapper<TzLicensePermissionRel>, SelectByIdsMapper<TzLicensePermissionRel> {
 }

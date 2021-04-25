@@ -12,7 +12,7 @@
     <result column="COLU_ENABLE" jdbcType="VARCHAR" property="coluEnable" />
     <result column="COLE_PATH" jdbcType="VARCHAR" property="colePath" />
     <result column="TEMP_ID" jdbcType="VARCHAR" property="tempId" />
-    <result column="ART_TYPE" jdbcType="VARCHAR" property="artType" />
+    <result column="ART_TYPE_ID" jdbcType="VARCHAR" property="artTypeId" />
     <result column="F_COLU_ID" jdbcType="VARCHAR" property="fColuId" />
     <result column="COLU_LEVEL" jdbcType="INTEGER" property="coluLevel" />
     <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />

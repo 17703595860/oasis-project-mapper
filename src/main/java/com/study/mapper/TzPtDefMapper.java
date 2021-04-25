@@ -2,9 +2,7 @@ package com.study.mapper;
 
 import com.study.entity.TzPtDef;
 import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.common.ids.SelectByIdsMapper;
 
-/**
-* Created by Mybatis Generator 2021/04/24
-*/
-public interface TzPtDefMapper extends Mapper<TzPtDef> {
+public interface TzPtDefMapper extends Mapper<TzPtDef>, SelectByIdsMapper<TzPtDef> {
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
-* Created by Mybatis Generator 2021/04/24
+* Created by Mybatis Generator 2021/04/25
 */
 @Table(name = "TZ_SITE_TEMP")
 @Getter
@@ -26,7 +26,7 @@ public class TzSiteTemp {
     private String id;
 
     /**
-     * 机构编号,站点表外键
+     * 所属站点,站点表外键
      */
     @Column(name = "SITE_ID")
     private String siteId;

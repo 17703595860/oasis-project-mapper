@@ -2,9 +2,7 @@ package com.study.mapper;
 
 import com.study.entity.TzBusentity;
 import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.common.ids.SelectByIdsMapper;
 
-/**
-* Created by Mybatis Generator 2021/04/24
-*/
-public interface TzBusentityMapper extends Mapper<TzBusentity> {
+public interface TzBusentityMapper extends Mapper<TzBusentity>, SelectByIdsMapper<TzBusentity> {
 }

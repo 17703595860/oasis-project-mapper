@@ -25,14 +25,14 @@ CREATE TABLE TZ_ORGANIZATION_SITE (
 DROP TABLE IF EXISTS TZ_SITE_COLU;
 CREATE TABLE TZ_SITE_COLU (
   `ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL PRIMARY KEY COMMENT '主键,雪花算法',
-  `SITE_ID` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '机构编号,站点表外键',
+  `SITE_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '所属站点,站点表外键',
   `NAME` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE COMMENT '栏目名称,唯一键',
-  `COLU_TYPE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '栏目类型,A：单页B:列表C:跳转D:活动',
+  `COLU_TYPE` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '栏目类型,A：单页B:列表C:跳转D:活动',
   `COLU_ENABLE` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Y' COMMENT '是否启用,Y：启用N：不启用',
   `COLE_PATH` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '栏目路径',
-  `TEMP_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '栏目内容模板,模板表主键',
-  `ART_TYPE` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '内容类型,内容类型表主键',
-  `F_COLU_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '上级栏目ID,用于树型栏目',
+  `TEMP_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '站点模板,模板表主键',
+  `ART_TYPE_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '内容类型,内容类型表主键',
+  `F_COLU_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '上级栏目,用于树型栏目',
   `COLU_LEVEL` int(11) NOT NULL COMMENT '栏目级别,用于树型栏目，从0开始',
   `COMMENTS` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
   `MODIFICATION_NUM` int NOT NULL DEFAULT '0' COMMENT '修改记录号',
@@ -47,9 +47,9 @@ CREATE TABLE TZ_SITE_COLU (
 DROP TABLE IF EXISTS TZ_SITE_TEMP;
 CREATE TABLE TZ_SITE_TEMP (
   `ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL PRIMARY KEY COMMENT '主键,雪花算法',
-  `SITE_ID` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '机构编号,站点表外键',
+  `SITE_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '所属站点,站点表外键',
   `NAME` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE COMMENT '模板名称,唯一键',
-  `TEMP_TYPE` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '模板类型,A：单页B:列表',
+  `TEMP_TYPE` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '模板类型,A：单页B:列表',
   `TEMP_ENABLE` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'Y' COMMENT '是否启用,Y：启用N：不启用',
   `TZ_TEMP_PCCODE` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'PC模板',
   `TZ_TEMP_MSCODE` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '手机模板',
@@ -66,12 +66,12 @@ CREATE TABLE TZ_SITE_TEMP (
 DROP TABLE IF EXISTS TZ_SITE_ART;
 CREATE TABLE TZ_SITE_ART (
   `ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL PRIMARY KEY COMMENT '主键,雪花算法',
-  `SITE_ID` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '机构编号,站点表外键',
+  `SITE_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '所属站点,站点表外键',
   `ART_TITLE` varchar(254) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL UNIQUE COMMENT '内容标题,唯一键',
   `ART_TITLE_STYLE` varchar(254) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '带样式标题',
   `ART_SHORTTITLE` varchar(70) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '短标题',
   `SUBHEAD` varchar(70) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '副标题',
-  `ART_ADD_TYPE` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '内容附加字段类型,内容类型表主键',
+  `ART_ADD_TYPE_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '内容附加字段类型,内容类型表主键',
   `ART_TYPE` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'A' COMMENT '内容类型,A:自建文章B:外部引用',
   `START_DATE` date DEFAULT NULL COMMENT '开始日期,用于活动',
   `START_TIME` time DEFAULT NULL COMMENT '开始时间,用于活动',
@@ -118,7 +118,7 @@ CREATE TABLE TZ_SITE_ADD_ART (
 DROP TABLE IF EXISTS TZ_SITE_ART_IMAGE;
 CREATE TABLE TZ_SITE_ART_IMAGE (
   `ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL PRIMARY KEY COMMENT '主键,雪花算法',
-  `ART_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容ID',
+  `ART_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容,内容表主键',
   `IMAGE_TYPE` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '图片类型,A:标题图B:图片墙，标题图最多只有一张，图片墙可以有多张',
   `IMAGE_TITLE` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '标题图标题',
   `IMAGE_DESC` varchar(254) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '标题图描述',
@@ -149,11 +149,11 @@ CREATE TABLE TZ_ART_ADD_TYPE (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='内容类型表';
 
 
--- TZ_ART_ADD_TYPE
-DROP TABLE IF EXISTS TZ_ART_ADD_TYPE;
-CREATE TABLE TZ_ART_ADD_TYPE (
+-- TZ_ART_ADD_TYPE_FIELD
+DROP TABLE IF EXISTS TZ_ART_ADD_TYPE_FIELD;
+CREATE TABLE TZ_ART_ADD_TYPE_FIELD (
   `ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL PRIMARY KEY COMMENT '主键,雪花算法',
-  `TYPE_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容类型表外键',
+  `TYPE_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容类型,内容类型表外键',
   `FIELD_VALUE` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '类型的值,站点内容附加内容表里面附加字段',
   `FIELD_DESC` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '类型的描述',
   `SEQ` int(11) NOT NULL COMMENT '显示的排序',
@@ -171,9 +171,9 @@ CREATE TABLE TZ_ART_ADD_TYPE (
 DROP TABLE IF EXISTS TZ_SITE_ART_FILE;
 CREATE TABLE TZ_SITE_ART_FILE (
   `ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL PRIMARY KEY COMMENT '主键,雪花算法',
-  `ART_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容ID',
+  `ART_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容,内容表主键',
   `FILE_SORT` int(11) DEFAULT NULL COMMENT '文件排序',
-  `FILE_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '附件表ID',
+  `FILE_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '附件,附件表主键',
   `COMMENTS` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
   `MODIFICATION_NUM` int NOT NULL DEFAULT '0' COMMENT '修改记录号',
   `CREATED_BY` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ADMIN0000000000001' COMMENT '创建人',
@@ -187,11 +187,11 @@ CREATE TABLE TZ_SITE_ART_FILE (
 DROP TABLE IF EXISTS TZ_COLU_ART;
 CREATE TABLE TZ_COLU_ART (
   `ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL PRIMARY KEY COMMENT '主键,雪花算法',
-  `SITE_ID` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '机构编号,站点表外键',
-  `COLU_ID` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '栏目编号,栏目表外键',
-  `ART_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容ID,内容表外键',
+  `SITE_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '所属站点,站点表外键',
+  `COLU_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '栏目编号,栏目表外键',
+  `ART_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '内容,内容表外键',
   `ART_PUB_DT` datetime DEFAULT NULL COMMENT '内容最新的发布时间',
-  `ART_PUB_STATE` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'N' COMMENT '发布状态,Y:已经发布N：未发布',
+  `ART_PUB_STATE` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'N' COMMENT '发布状态,Y:已经发布N：未发布',
   `ART_URL` varchar(254) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '文章动态URL',
   `STATIC_ART_URL` varchar(254) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '文章静态URL,如果发布成静态的HTML',
   `ART_SEQ` int(11) NOT NULL COMMENT '本栏目文章顺序',
@@ -201,9 +201,7 @@ CREATE TABLE TZ_COLU_ART (
   `ART_HTML` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '文章HTML代码',
   `ART_PHONE_HTML` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '文章手机HTML代码',
   `ART_CONENT_SCR` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '文章发布HTML代码',
-  `STATIC_FLAG` int(11) NOT NULL COMMENT '是否静态化,A:静态化B:不静态化
-如果有访问限制，只能是B
-如果是A那么才有STATIC_NAME输入框',
+  `STATIC_FLAG` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '是否静态化,A:静态化B:不静态化 如果有访问限制，只能是B 如果是A那么才有STATIC_NAME输入框',
   `PROJECT_LIMIT` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'A' COMMENT '访问限制,A:无限制B:指定群组',
   `ART_PHONE_CONENT_SCR` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '文章发布手机HTML代码',
   `STATIC_NAME` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '文章生成静态文件名自定义',
@@ -221,8 +219,8 @@ CREATE TABLE TZ_COLU_ART (
 DROP TABLE IF EXISTS TZ_COLU_ART_GROUP;
 CREATE TABLE TZ_COLU_ART_GROUP (
   `ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL PRIMARY KEY COMMENT '主键,雪花算法',
-  `COLU_ART_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '栏目内容ID',
-  `GROUP_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '群组ID',
+  `COLU_ART_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '栏目内容,栏目内容ID',
+  `GROUP_ID` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '群组,群组ID',
   `COMMENTS` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '备注',
   `MODIFICATION_NUM` int NOT NULL DEFAULT '0' COMMENT '修改记录号',
   `CREATED_BY` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'ADMIN0000000000001' COMMENT '创建人',

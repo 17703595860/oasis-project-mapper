@@ -25,12 +25,12 @@ public class CreateTableSql {
 
     // 开始的sheet，下标从0开始
     private int startSheet = 0;
-    private File srcFile = new File("D:\\tranzversion_ideaProject\\new-java-product\\基础框架设计开发\\菜单管理\\菜单管理.xlsx");
+    private File srcFile = new File("D:\\tranzversion_ideaProject\\new-java-product\\基础框架设计开发\\CMS和活动\\CMS和活动数据字典.xlsx");
 
     // 是否自定义路径
     private boolean fileFlag = false;
     private String descFilePath = "D:/桌面/";
-    private String fileName = "menu-schema.sql";
+    private String fileName = "cms-schema.sql";
 
 
     @Test

@@ -2,9 +2,7 @@ package com.study.mapper;
 
 import com.study.entity.TzAppClass;
 import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.common.ids.SelectByIdsMapper;
 
-/**
-* Created by Mybatis Generator 2021/04/24
-*/
-public interface TzAppClassMapper extends Mapper<TzAppClass> {
+public interface TzAppClassMapper extends Mapper<TzAppClass>, SelectByIdsMapper<TzAppClass> {
 }

@@ -2,9 +2,7 @@ package com.study.mapper;
 
 import com.study.entity.TzSystemParameter;
 import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.common.ids.SelectByIdsMapper;
 
-/**
-* Created by Mybatis Generator 2021/04/24
-*/
-public interface TzSystemParameterMapper extends Mapper<TzSystemParameter> {
+public interface TzSystemParameterMapper extends Mapper<TzSystemParameter>, SelectByIdsMapper<TzSystemParameter> {
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
-* Created by Mybatis Generator 2021/04/24
+* Created by Mybatis Generator 2021/04/25
 */
 @Table(name = "TZ_SITE_COLU")
 @Getter
@@ -26,7 +26,7 @@ public class TzSiteColu {
     private String id;
 
     /**
-     * 机构编号,站点表外键
+     * 所属站点,站点表外键
      */
     @Column(name = "SITE_ID")
     private String siteId;
@@ -56,7 +56,7 @@ public class TzSiteColu {
     private String colePath;
 
     /**
-     * 栏目内容模板,模板表主键
+     * 站点模板,模板表主键
      */
     @Column(name = "TEMP_ID")
     private String tempId;
@@ -64,11 +64,11 @@ public class TzSiteColu {
     /**
      * 内容类型,内容类型表主键
      */
-    @Column(name = "ART_TYPE")
-    private String artType;
+    @Column(name = "ART_TYPE_ID")
+    private String artTypeId;
 
     /**
-     * 上级栏目ID,用于树型栏目
+     * 上级栏目,用于树型栏目
      */
     @Column(name = "F_COLU_ID")
     private String fColuId;

@@ -2,9 +2,7 @@ package com.study.mapper;
 
 import com.study.entity.TzFileStorageRule;
 import tk.mybatis.mapper.common.Mapper;
+import tk.mybatis.mapper.common.ids.SelectByIdsMapper;
 
-/**
-* Created by Mybatis Generator 2021/04/24
-*/
-public interface TzFileStorageRuleMapper extends Mapper<TzFileStorageRule> {
+public interface TzFileStorageRuleMapper extends Mapper<TzFileStorageRule>, SelectByIdsMapper<TzFileStorageRule> {
 }

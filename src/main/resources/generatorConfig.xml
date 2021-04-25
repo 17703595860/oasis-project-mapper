@@ -16,7 +16,7 @@
         <property name="endingDelimiter" value="`"/>
 
         <!-- 通用mapper插件 -->
-        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+        <plugin type="com.study.plugins.MapperPlugin">
 <!--            <property name="mappers" value="tk.mybatis.mapper.common.Mapper"/>-->
             <property name="mappers" value="tk.mybatis.mapper.common.Mapper,tk.mybatis.mapper.common.ids.SelectByIdsMapper"/>
             <property name="caseSensitive" value="true"/>

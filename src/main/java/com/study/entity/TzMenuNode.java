@@ -65,6 +65,18 @@ public class TzMenuNode {
     private String permissionId;
 
     /**
+     * 栏目,栏目ID
+     */
+    @Column(name = "SITE_COLU_ID")
+    private String siteColuId;
+
+    /**
+     * 模板,模板id
+     */
+    @Column(name = "SITE_TEMP_ID")
+    private String siteTempId;
+
+    /**
      * 修改记录号
      */
     @Column(name = "MODIFICATION_NUM")
@@ -81,18 +93,6 @@ public class TzMenuNode {
 
     @Column(name = "LAST_UPD")
     private Date lastUpd;
-
-    /**
-     * 栏目,栏目ID
-     */
-    @Column(name = "SITE_COLU_ID")
-    private String siteColuId;
-
-    /**
-     * 模板,模板id
-     */
-    @Column(name = "SITE_TEMP_ID")
-    private String siteTempId;
 
     @Column(name = "VARIABLES")
     private String variables;

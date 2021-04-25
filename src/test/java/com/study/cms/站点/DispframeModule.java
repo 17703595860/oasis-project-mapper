@@ -22,17 +22,14 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.CollectionUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.persistence.Column;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -411,9 +408,11 @@ public class DispframeModule {
      */
     private void copyFieldElement(String dispFrameId, String beId, String beName, String type) {
 
-        List<TzField> fieldList = tzFieldMapper.select(new TzField() {{
-            setBusentityId(beId);
-        }});
+        Example fieldExample = new Example(TzField.class);
+        Example.Criteria fieldCriteria = fieldExample.createCriteria();
+        fieldCriteria.andEqualTo("busentityId", beId);
+        fieldExample.orderBy("id").asc();
+        List<TzField> fieldList = tzFieldMapper.selectByExample(fieldExample);
 
         AtomicInteger seqNum = new AtomicInteger();
         List<TzDispframeElement> tzDispframeElementList = fieldList.stream().map(field -> {
@@ -453,9 +452,11 @@ public class DispframeModule {
                         setName(joinField.getJoinName());
                     }});
                     if (tzJoin == null || StringUtils.isBlank(tzJoin.getId())) throw new RuntimeException("join字段" + joinField.getName() + "配置错误");
-                    List<TzJoinSpec> tzJoinSpecList = tzJoinSpecMapper.select(new TzJoinSpec() {{
-                        setJoinId(tzJoin.getId());
-                    }});
+                    Example example = new Example(TzJoinSpec.class);
+                    Example.Criteria criteria = example.createCriteria();
+                    criteria.andEqualTo("joinId", tzJoin.getId());
+                    example.orderBy("id").asc();
+                    List<TzJoinSpec> tzJoinSpecList = tzJoinSpecMapper.selectByExample(example);
                     Integer seq = Integer.MAX_VALUE;
                     if (CollectionUtils.isEmpty(tzJoinSpecList)) throw new RuntimeException("join字段" + joinField.getName() + "配置错误");
                     for (TzJoinSpec joinSpec : tzJoinSpecList) {

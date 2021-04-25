@@ -3,6 +3,7 @@ package com.study.AA_Utils;
 import com.study.entity.*;
 import com.study.mapper.*;
 import com.study.utils.SnowFlake;
+import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,9 +15,14 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.CollectionUtils;
+import tk.mybatis.mapper.entity.Example;
 
-import java.util.Date;
-import java.util.List;
+import javax.persistence.Column;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -61,23 +67,33 @@ public class DispframeModule {
     private Integer dispFrameElementIdA = 1;
     private Integer dispFrameFldJumpIdA = 1;
 
+    private List<String> dispFrameIdInsertList = new ArrayList<>();
+    private List<String> dispFrameElementIdInsertList = new ArrayList<>();
+    private List<String> dispFrameFldJumpIdInsertList = new ArrayList<>();
+
+    String beName = "TZOrgSite";
+    String datasetFlg = "Admin";
+    String filterName = "TZOrgSiteFilter";
+
+    boolean jumpFlag = true;
+    String DetailComponentId = "cmsCOM000000000002";
+
+    boolean add = true;
+    boolean edit = true;
+    boolean search = true;
+    boolean del = true;
+
+    // 是否自定义路径
+    private String module = "cms";
+    private boolean fileFlag = false;
+    private String descFilePath = "D:/桌面/sql/";
+    private boolean transactionCommit = false;
+
     /**
      * 根据be名称添加ListAdmin展示框架和展示框架元素
      */
     @Test
     public void copyDisplayFrameAllByBeName() {
-        String beName = "TZStudent";
-        String datasetFlg = "Admin";
-        String filterName = "StudentFilter";
-
-        boolean jumpFlag = true;
-        String DetailComponentId = "534420627126358025";
-
-        boolean add = true;
-        boolean edit = true;
-        boolean search = true;
-        boolean del = true;
-
 
         DefaultTransactionDefinition def = new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRED);
         def.setName("copyFieldToDisplayFrame");
@@ -177,21 +193,136 @@ public class DispframeModule {
                 tzDispframeElementMapper.insertSelective(tzDispframeElementButton);
             }
 
-            transactionManager.commit(status);
+            addFileSql();
+
+            if (transactionCommit) {
+                transactionManager.commit(status);
+            } else {
+                transactionManager.rollback(status);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             transactionManager.rollback(status);
         }
     }
 
+    private void addFileSql() {
+        String srcFilePath = null;
+        if (fileFlag) {
+            srcFilePath = descFilePath;
+        }else {
+            srcFilePath = "src/test/java/com/study/AA_sql/" + module + "/";
+            new File(srcFilePath).mkdirs();
+        }
+        addframe(srcFilePath);
+    }
+
+    private void addframe(String srcFilePath) {
+        String filePath = srcFilePath + "10-DISPFRAME.sql";
+        if (new File(filePath).exists()) {
+            new File(filePath).delete();
+        }
+        if (CollectionUtils.isEmpty(dispFrameIdInsertList)) {
+            return;
+        }
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
+            String beId = tzBusentityMapper.selectOne(new TzBusentity() {{
+                setName(beName);
+            }}).getId();
+
+            bw.write("delete from TZ_DISPFRAME_FLDDRILLDOWN where DISPFRAME_DTL_ID in (select ID from TZ_DISPFRAME_ELEMENT where DISPFRAME_ID in (select ID from TZ_DISPFRAME where BE_ID in ('" + beId + "')));");
+            bw.newLine();
+            bw.write("delete from TZ_DISPFRAME_ELEMENT where DISPFRAME_ID in (select ID from TZ_DISPFRAME where BE_ID in ('" + beId + "'));");
+            bw.newLine();
+            bw.write("delete from TZ_DISPFRAME where BE_ID in ('" + beId + "');");
+            bw.newLine();bw.newLine();
+
+            // 添加frame
+            List<TzDispframe> tzDispframeList = tzDispframeMapper.selectByIds(StringUtils.join(dispFrameIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+            List<Map<String, List<String>>> objList = tzDispframeList.stream().map(this::getColAndVal).collect(Collectors.toList());
+            createSql(objList, "TZ_DISPFRAME", bw);
+            // 添加frameElement
+            List<TzDispframeElement> tzDispframeElementList = tzDispframeElementMapper.selectByIds(StringUtils.join(dispFrameElementIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+            objList = tzDispframeElementList.stream().map(this::getColAndVal).collect(Collectors.toList());
+            createSql(objList, "TZ_DISPFRAME_ELEMENT", bw);
+            // 添加frameFldJump
+            List<TzDispframeFlddrilldown> dispframeFlddrilldownList = tzDispframeFlddrilldownMapper.selectByIds(StringUtils.join(dispFrameFldJumpIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+            objList = dispframeFlddrilldownList.stream().map(this::getColAndVal).collect(Collectors.toList());
+            createSql(objList, "TZ_DISPFRAME_FLDDRILLDOWN", bw);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SneakyThrows
+    private void createSql(List<Map<String, List<String>>> objList, String tableName, BufferedWriter bw) {
+        if (CollectionUtils.isEmpty(objList)) {
+            return;
+        }
+        bw.write("INSERT INTO `" + tableName + "`(" + StringUtils.join(objList.get(0).get("col"), ", ") + ") VALUES");
+        bw.newLine();
+        for (int i = 0; i < objList.size(); i++) {
+            if (i == objList.size() - 1) {
+                bw.write("  (" + StringUtils.join(objList.get(i).get("val"), ", ") + ")");
+            } else {
+                bw.write("  (" + StringUtils.join(objList.get(i).get("val"), ", ") + "),");
+            }
+            bw.newLine();
+        }
+        bw.write(";");
+        bw.newLine();bw.newLine();
+    }
+
+    @SneakyThrows
+    private Map<String, List<String>> getColAndVal(Object obj) {
+        ArrayList<String> colList = new ArrayList<>();
+        ArrayList<String> valList = new ArrayList<>();
+        Class<?> zClass = obj.getClass();
+        Field[] fields = zClass.getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            String name = field.getName();
+            if (StringUtils.equalsAny(name, "createdBy", "created", "lastUpdBy", "lastUpd")) {
+                continue;
+            }
+            String colName = field.getAnnotation(Column.class).name();
+            String valStr = null;
+            Object valObj = field.get(obj);
+            if (valObj == null) {
+                valStr = "null";
+            } else {
+                valStr = valObj.toString();
+                if (Date.class.isAssignableFrom(field.getType())) {
+                    throw new RuntimeException("有日期时间类型");
+                }
+                if (String.class.isAssignableFrom(field.getType())) {
+                    valStr = "'" + valStr + "'";
+                }
+            }
+            colList.add("`" + colName + "`");
+            valList.add(valStr);
+        }
+        Map<String, List<String>> result = new HashMap<String, List<String>>() {{
+            put("col", colList);
+            put("val", valList);
+        }};
+        return result;
+    }
+
     private String nextDispFrameId() {
-        return dispFrameIdpre + String.format("%0" + (idNum-dispFrameIdpre.length()) + "d", dispFrameIdA++);
+        String frameId = dispFrameIdpre + String.format("%0" + (idNum - dispFrameIdpre.length()) + "d", dispFrameIdA++);
+        dispFrameIdInsertList.add(frameId);
+        return frameId;
     }
     private String nextDispFrameElementId() {
-        return dispFrameElementIdpre + String.format("%0" + (idNum-dispFrameElementIdpre.length()) + "d", dispFrameElementIdA++);
+        String dispframeElementId = dispFrameElementIdpre + String.format("%0" + (idNum - dispFrameElementIdpre.length()) + "d", dispFrameElementIdA++);
+        dispFrameElementIdInsertList.add(dispframeElementId);
+        return dispframeElementId;
     }
     private String nextDispFrameFldJumpId() {
-        return dispFrameFldJumpIdpre + String.format("%0" + (idNum-dispFrameFldJumpIdpre.length()) + "d", dispFrameFldJumpIdA++);
+        String dispframeFldJumpId = dispFrameFldJumpIdpre + String.format("%0" + (idNum - dispFrameFldJumpIdpre.length()) + "d", dispFrameFldJumpIdA++);
+        dispFrameFldJumpIdInsertList.add(dispframeFldJumpId);
+        return dispframeFldJumpId;
     }
 
     /**
@@ -270,9 +401,11 @@ public class DispframeModule {
      */
     private void copyFieldElement(String dispFrameId, String beId, String beName, String type) {
 
-        List<TzField> fieldList = tzFieldMapper.select(new TzField() {{
-            setBusentityId(beId);
-        }});
+        Example fieldExample = new Example(TzField.class);
+        Example.Criteria fieldCriteria = fieldExample.createCriteria();
+        fieldCriteria.andEqualTo("busentityId", beId);
+        fieldExample.orderBy("id").asc();
+        List<TzField> fieldList = tzFieldMapper.selectByExample(fieldExample);
 
         AtomicInteger seqNum = new AtomicInteger();
         List<TzDispframeElement> tzDispframeElementList = fieldList.stream().map(field -> {
@@ -312,9 +445,11 @@ public class DispframeModule {
                         setName(joinField.getJoinName());
                     }});
                     if (tzJoin == null || StringUtils.isBlank(tzJoin.getId())) throw new RuntimeException("join字段" + joinField.getName() + "配置错误");
-                    List<TzJoinSpec> tzJoinSpecList = tzJoinSpecMapper.select(new TzJoinSpec() {{
-                        setJoinId(tzJoin.getId());
-                    }});
+                    Example example = new Example(TzJoinSpec.class);
+                    Example.Criteria criteria = example.createCriteria();
+                    criteria.andEqualTo("joinId", tzJoin.getId());
+                    example.orderBy("id").asc();
+                    List<TzJoinSpec> tzJoinSpecList = tzJoinSpecMapper.selectByExample(example);
                     Integer seq = Integer.MAX_VALUE;
                     if (CollectionUtils.isEmpty(tzJoinSpecList)) throw new RuntimeException("join字段" + joinField.getName() + "配置错误");
                     for (TzJoinSpec joinSpec : tzJoinSpecList) {

@@ -222,7 +222,7 @@ public class MetadataModule {
               setEntityClass(TzSiteTemp.class);
               setTableName("TZ_SITE_TEMP");
             }}, "NAME", "ID", Arrays.asList("ID", "NAME", "TEMP_TYPE")));
-            add(new Prompt(null, "tzArtTypeIdPrompt", "TEMP_ID", new Be() {{
+            add(new Prompt(null, "tzArtTypeIdPrompt", "ART_TYPE_ID", new Be() {{
               setBeName("TZArtAddType");
               setEntityClass(TzArtAddType.class);
               setTableName("ART_TYPE_ID");
@@ -732,6 +732,17 @@ public class MetadataModule {
       tzBusentity.setMsgCollectionId(tzMessageCollection.getId());
       tzBusentityMapper.updateByPrimaryKeySelective(tzBusentity);
 
+      // 消息 be名称的消息集合
+      String beName = be.getBeName();
+      String tableComment = databaseUtil.getTableComment(be.getTableName());
+      tableComment = StringUtils.isBlank(tableComment) ? beName : tableComment;
+      tableComment = tableComment.replace("，", ",");
+      tableComment = tableComment.replace("表", "");
+      TzMessageInfo tzMessageInfo01 = new TzMessageInfo(nextMessageInfId(), tzMessageCollection.getId(), "ZHS", beName, beName + "." + beName, tableComment, "Y", 1, admin, date, admin, date);
+      TzMessageInfo tzMessageInfo02 = new TzMessageInfo(nextMessageInfId(), tzMessageCollection.getId(), "ENG", beName, beName + "." + beName, beName, "Y", 1, admin, date, admin, date);
+      tzMessageInfoMapper.insertSelective(tzMessageInfo01);
+      tzMessageInfoMapper.insertSelective(tzMessageInfo02);
+
       List<ColumnMetaData> colData = databaseUtil.getColData(be.getTableName());
       Map<String, ColumnMetaData> fieldColData = getFieldMapColData(be, colData);
       for (Map.Entry<String, ColumnMetaData> entry : fieldColData.entrySet()) {
@@ -1107,6 +1118,8 @@ public class MetadataModule {
     String s = "asasasasasas";
     System.out.println(s.replace("a", "L"));
     System.out.println(StringUtils.replaceOnce(s, "a", "L"));
+    String comment = databaseUtil.getTableComment("TZ_IMPORT_HISTORY");
+    System.out.println(comment);
   }
 
   @Test

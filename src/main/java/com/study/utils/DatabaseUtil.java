@@ -1,8 +1,10 @@
 package com.study.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -17,6 +19,8 @@ public class DatabaseUtil {
 
     @Autowired
     private DataSource dataSource;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private final static Logger LOGGER = LoggerFactory.getLogger(DatabaseUtil.class);
 
@@ -319,6 +323,16 @@ public class DatabaseUtil {
             result.add(columnMetaData);
         }
         return result;
+    }
+
+    public String getTableComment(String tableName) {
+        Map<String, Object> map = jdbcTemplate.queryForMap("SHOW TABLE STATUS WHERE Name=?", tableName);
+        if (map.isEmpty()) {
+            return null;
+        }
+        String comment = String.valueOf(map.get("Comment"));
+        comment = StringUtils.isBlank(comment) ? null : comment;
+        return comment;
     }
 
 }

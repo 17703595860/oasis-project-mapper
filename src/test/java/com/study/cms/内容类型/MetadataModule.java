@@ -174,66 +174,19 @@ public class MetadataModule {
 
   private String module = "cms";
   private String moduleDesc = "站点模块";
-  private Bm bm = new Bm(null, "TZOrgSite", "TZOrgSite", new HashMap<String, String>() {{
+  private Bm bm = new Bm(null, "TZArtAddType", "TZArtAddType", new HashMap<String, String>() {{
     put("retrieve", "查看");
     put("create", "新增");
     put("update", "修改");
     put("delete", "删除");
   }}, new ArrayList<Link>() {{
-    add(new Link("TZOrgSite/TZSiteColu", "ID", "SITE_ID", new HashMap<String, String>() {{
-      put("retrieve", "查看");
-      put("create", "新增");
-      put("update", "修改");
-      put("delete", "删除");
-    }}));
-    add(new Link("TZOrgSite/TZSiteTemp", "ID", "SITE_ID", new HashMap<String, String>() {{
+    add(new Link("TZArtAddType/TZArtAddTypeField", "ID", "TYPE_ID", new HashMap<String, String>() {{
       put("retrieve", "查看");
       put("create", "新增");
       put("update", "修改");
       put("delete", "删除");
     }}));
   }});
-//  private List<Be> beList = new ArrayList<Be>() {{
-//    add(new Be() {{
-//      setBeName("TZOrgSite");
-//      setEntityClass(TzOrganizationSite.class);
-//      setTableName("TZ_ORGANIZATION_SITE");
-//      setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
-//      setFilter(new FilterDfn(null, "TZOrgSiteFilter", Arrays.asList("NAME", "SITE_NAME", "SITE_TYPE", "SITE_DESC", "SITE _ENABLE")));
-//      setTransformList(new ArrayList<Transform>() {{
-//        add(new Transform("SITE_TYPE", "cmsTrnsCl000000001"));
-//        add(new Transform("SITE_ENABLE", "cmsTrnsCl000000002"));
-//        add(new Transform("SITE_ISSUE", "cmsTrnsCl000000003"));
-//      }});
-//      setZBeList(new ArrayList<Be>() {{
-//        add(new Be() {{
-//          setBeName("TZSiteColu");
-//          setEntityClass(TzSiteColu.class);
-//          setTableName("TZ_SITE_COLU");
-//          setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
-//          setFilter(new FilterDfn(null, "TZSiteColuFilter", Arrays.asList("NAME", "COLU_TYPE", "COLU_ENABLE", "SITE_DESC", "SITE _ENABLE")));
-//          setTransformList(new ArrayList<Transform>() {{
-//            add(new Transform("SITE_TYPE", "cmsTrnsCl000000001"));
-//            add(new Transform("SITE_ENABLE", "cmsTrnsCl000000002"));
-//            add(new Transform("SITE_ISSUE", "cmsTrnsCl000000003"));
-//          }});
-//          setPromptList(new ArrayList<Prompt>() {{
-//            add(new Prompt(null, "classIdPrompt", "CLASS_ID", new Be() {{
-//              setBeName("TZClass");
-//              setEntityClass(TzClass.class);
-//              setTableName("TZ_CLASS");
-//            }}, "NAME", "ID", Arrays.asList("ID", "NAME")));
-//          }});
-//        }});
-//        add(new Be() {{
-//          setBeName("TZCourse");
-//          setEntityClass(TzCourseInst.class);
-//          setTableName("TZ_COURSE_INST");
-//          setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
-//        }});
-//      }});
-//    }});
-//  }};
 
   private List<Be> beList = new ArrayList<Be>() {{
     add(new Be() {{
@@ -241,14 +194,24 @@ public class MetadataModule {
       setEntityClass(TzArtAddType.class);
       setTableName("TZ_ART_ADD_TYPE");
       setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
+      setFilter(new FilterDfn(null, "TZArtAddTypeFilter", Arrays.asList("NAME", "TYPE_ENABLE")));
+      setTransformList(new ArrayList<Transform>() {{
+        add(new Transform("TYPE_ENABLE", "ART_TYPE_ENABLE"));
+      }});
     }});
     add(new Be() {{
       setBeName("TZArtAddTypeField");
       setEntityClass(TzArtAddTypeField.class);
       setTableName("TZ_ART_ADD_TYPE_FIELD");
       setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
+      setFilter(new FilterDfn(null, "TZArtAddTypeFieldFilter", Arrays.asList("FIELD_VALUE", "FIELD_DESC", "FIELD_ENABLE")));
+      setTransformList(new ArrayList<Transform>() {{
+        add(new Transform("FIELD_ENABLE", "ART_TYPE_FIELD_ENABLE"));
+      }});
     }});
   }};
+
+
 
   /**
    * 根据be名称添加ListAdmin展示框架和展示框架元素
@@ -375,23 +338,28 @@ public class MetadataModule {
     if (new File(filePath).exists()) {
       new File(filePath).delete();
     }
-    if (CollectionUtils.isEmpty(permissionGroupIdInsertList)) {
-      return;
-    }
     try(BufferedWriter bw = new BufferedWriter(new FileWriter(filePath, true))) {
-      String permissionGoupStr = StringUtils.join(permissionGroupIdInsertList.stream().map(e -> "'" + e +"'").collect(Collectors.toList()), ", ");
-      bw.write("delete from TZ_PERMISSION where GROUP_ID in (" + permissionGoupStr + ");");
-      bw.newLine();
-      bw.write("delete from TZ_PERMISSION_GROUP where ID in (" + permissionGoupStr + ");");
-      bw.newLine();bw.newLine();
+
       // 添加permissionGroup
-      List<TzPermissionGroup> permissionGroupList = tzPermissionGroupMapper.selectByIds(StringUtils.join(permissionGroupIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
-      List<Map<String, List<String>>> objList = permissionGroupList.stream().map(this::getColAndVal).collect(Collectors.toList());
-      createSql(objList, "TZ_PERMISSION_GROUP", bw);
+
+      if (!CollectionUtils.isEmpty(permissionGroupIdInsertList)) {
+        String permissionGoupStr = StringUtils.join(permissionGroupIdInsertList.stream().map(e -> "'" + e +"'").collect(Collectors.toList()), ", ");
+        bw.write("delete from TZ_PERMISSION where GROUP_ID in (" + permissionGoupStr + ");");
+        bw.newLine();
+        bw.write("delete from TZ_PERMISSION_GROUP where ID in (" + permissionGoupStr + ");");
+        bw.newLine();bw.newLine();
+
+        List<TzPermissionGroup> permissionGroupList = tzPermissionGroupMapper.selectByIds(StringUtils.join(permissionGroupIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+        List<Map<String, List<String>>> objList = permissionGroupList.stream().map(this::getColAndVal).collect(Collectors.toList());
+        createSql(objList, "TZ_PERMISSION_GROUP", bw);
+      }
+
       // 添加permission
-      List<TzPermission> permissionList = tzPermissionMapper.selectByIds(StringUtils.join(permissionIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
-      objList = permissionList.stream().map(this::getColAndVal).collect(Collectors.toList());
-      createSql(objList, "TZ_PERMISSION", bw);
+      if (!CollectionUtils.isEmpty(permissionIdInsertList)) {
+        List<TzPermission> permissionList = tzPermissionMapper.selectByIds(StringUtils.join(permissionIdInsertList.stream().map(e -> "'" + e + "'").collect(Collectors.toList()), ","));
+        List<Map<String, List<String>>> objList = permissionList.stream().map(this::getColAndVal).collect(Collectors.toList());
+        createSql(objList, "TZ_PERMISSION", bw);
+      }
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -709,7 +677,7 @@ public class MetadataModule {
     Map<String, String> permission = bm.getPermission();
     for (Map.Entry<String, String> entry : permission.entrySet()) {
       TzPermission tzPermission = new TzPermission(nextPermissionId(), tzPermissionGroup.getId(), bm.getBmName() + ":" + bm.getPriBeName() + ":" + entry.getValue(), bm.getBmName() + ":" + bm.getPriBeName() + ":" + entry.getKey()
-          , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
+              , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
       tzPermissionMapper.insertSelective(tzPermission);
     }
     permissionIdA += 20;
@@ -717,7 +685,7 @@ public class MetadataModule {
       for (Link link : bm.getLinkList()) {
         for (Map.Entry<String, String> entry : link.getPermission().entrySet()) {
           TzPermission tzPermission = new TzPermission(nextPermissionId(), tzPermissionGroup.getId(), bm.getBmName() + ":" + link.getName().split("/")[0] + ":" + link.getName().split("/")[1] + ":" + entry.getValue(), bm.getBmName() + ":" + link.getName().split("/")[0] + ":" + link.getName().split("/")[1] + ":" + entry.getKey()
-              , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
+                  , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
           tzPermissionMapper.insertSelective(tzPermission);
         }
         permissionIdA += 20;
@@ -842,7 +810,7 @@ public class MetadataModule {
         }
         String fieldName = getFieldName(coldata.getColName(), be);
         TzField tzField = new TzField(nextFieldId(), fieldName, be.getBeId(), null, coldata.getColName(), null, null, null, null, null, null, null, "N", "Y"
-            , null, 1, admin, date, admin, date, null, null, null);
+                , null, 1, admin, date, admin, date, null, null, null);
         String type = getColType(coldata);
         tzField.setDataType(type);
         tzField.setTextlen(coldata.getTextLen());
@@ -885,19 +853,19 @@ public class MetadataModule {
     tzJoinSpecMapper.insert(tzJoinSpec);
 
     TzField tzFieldModificationNumber = new TzField(nextFieldId(), "ModificationNumber", be.getBeId(), null, "MODIFICATION_NUM", null, null, "Number", null, null, null, "Y", "N", "Y"
-        , null, 1, admin, date, admin, date, "string", null, null);
+            , null, 1, admin, date, admin, date, "string", null, null);
     TzField tzFieldCreated = new TzField(nextFieldId(), "Created", be.getBeId(), null, "CREATED", null, null, "DateTime", null, null, null, "Y", "N", "Y"
-        , null, 1, admin, date, admin, date, "datetime", null, null);
+            , null, 1, admin, date, admin, date, "datetime", null, null);
     TzField tzFieldCreatedBy = new TzField(nextFieldId(), "CreatedBy", be.getBeId(), null, "CREATED_BY", null, null, "Varchar", 18, null, null, "Y", "N", "Y"
-        , null, 1, admin, date, admin, date, "String", null, null);
+            , null, 1, admin, date, admin, date, "String", null, null);
 
     TzField tzFieldCreatedByName = new TzField(nextFieldId(), "CreatedByName", be.getBeId(), "ByName","USERNAME", null, null, "Varchar", 255, null, null, "Y", "N", "Y"
-        , null, 1, admin, date, admin, date, "String", null, null);
+            , null, 1, admin, date, admin, date, "String", null, null);
 
     TzField tzFieldlastUpd = new TzField(nextFieldId(), "LastUpd", be.getBeId(), null, "LAST_UPD", null, null, "DateTime", null, null, null, "Y", "N", "Y"
-        , null, 1, admin, date, admin, date, "datetime", null, null);
+            , null, 1, admin, date, admin, date, "datetime", null, null);
     TzField tzFieldlastUpdBy = new TzField(nextFieldId(), "LastUpdBy", be.getBeId(), null, "LAST_UPD_BY", null, null, "Varchar", 18, null, null, "Y", "N", "Y"
-        , null, 1, admin, date, admin, date, "String", null, null);
+            , null, 1, admin, date, admin, date, "String", null, null);
 
     tzFieldMapper.insertSelective(tzFieldModificationNumber);
     tzFieldMapper.insertSelective(tzFieldCreated);

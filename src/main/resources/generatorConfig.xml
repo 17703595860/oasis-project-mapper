@@ -69,7 +69,8 @@
         <!-- tableName="%"表示数据库中所有表都参与逆向工程，此时使用默认规则 -->
         <!-- 默认规则：table_dept→TableDept -->
         <!-- 不符合默认规则时需要使用tableName和domainObjectName两个属性明确指定 -->
-        <table tableName="%"/>
+<!--        <table tableName="%"/>-->
+        <table tableName="TZ_ART_ADD_TYPE_FIELD"/>
 
 <!--        <table tableName="TZ_CLASS"/>-->
     </context>

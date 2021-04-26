@@ -10,7 +10,7 @@
     <result column="FIELD_VALUE" jdbcType="VARCHAR" property="fieldValue" />
     <result column="FIELD_DESC" jdbcType="VARCHAR" property="fieldDesc" />
     <result column="SEQ" jdbcType="INTEGER" property="seq" />
-    <result column="TYPE_ENABLE" jdbcType="VARCHAR" property="typeEnable" />
+    <result column="FIELD_ENABLE" jdbcType="VARCHAR" property="fieldEnable" />
     <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />
     <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
     <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />

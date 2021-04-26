@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
-* Created by Mybatis Generator 2021/04/25
+* Created by Mybatis Generator 2021/04/26
 */
 @Table(name = "TZ_ART_ADD_TYPE_FIELD")
 @Getter
@@ -52,8 +52,8 @@ public class TzArtAddTypeField {
     /**
      * 是否启用,Y：启用N：不启用
      */
-    @Column(name = "TYPE_ENABLE")
-    private String typeEnable;
+    @Column(name = "FIELD_ENABLE")
+    private String fieldEnable;
 
     /**
      * 备注

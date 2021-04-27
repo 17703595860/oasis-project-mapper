@@ -174,66 +174,47 @@ public class MetadataModule {
 
   private String module = "cms";
   private String moduleDesc = "站点模块";
-  private Bm bm = new Bm(null, "TZOrgSite", "TZOrgSite", new HashMap<String, String>() {{
+  private Bm bm = new Bm(null, "TZSiteArt", "TZSiteArt", new HashMap<String, String>() {{
     put("retrieve", "查看");
     put("create", "新增");
     put("update", "修改");
     put("delete", "删除");
+    put("importExcel", "导入");
+    put("exportExcel", "导出");
   }}, new ArrayList<Link>() {{
-    add(new Link("TZOrgSite/TZSiteColu", "ID", "SITE_ID", new HashMap<String, String>() {{
+    add(new Link("TZSiteArt/TZSiteArtImage", "ID", "ART_ID", new HashMap<String, String>() {{
       put("retrieve", "查看");
       put("create", "新增");
       put("update", "修改");
       put("delete", "删除");
+      put("importExcel", "导入");
+      put("exportExcel", "导出");
     }}));
-    add(new Link("TZOrgSite/TZSiteTemp", "ID", "SITE_ID", new HashMap<String, String>() {{
+    add(new Link("TZSiteArt/TZSiteArtFile", "ID", "ART_ID", new HashMap<String, String>() {{
       put("retrieve", "查看");
       put("create", "新增");
       put("update", "修改");
       put("delete", "删除");
+      put("importExcel", "导入");
+      put("exportExcel", "导出");
+    }}));
+    add(new Link("TZSiteArt/TZColuArt", "ID", "ART_ID", new HashMap<String, String>() {{
+      put("retrieve", "查看");
+      put("create", "新增");
+      put("update", "修改");
+      put("delete", "删除");
+      put("importExcel", "导入");
+      put("exportExcel", "导出");
+    }}));
+    add(new Link("TZColuArt/TZColuArtGroup", "ID", "COLU_ART_ID", new HashMap<String, String>() {{
+      put("retrieve", "查看");
+      put("create", "新增");
+      put("update", "修改");
+      put("delete", "删除");
+      put("importExcel", "导入");
+      put("exportExcel", "导出");
     }}));
   }});
-//  private List<Be> beList = new ArrayList<Be>() {{
-//    add(new Be() {{
-//      setBeName("TZOrgSite");
-//      setEntityClass(TzOrganizationSite.class);
-//      setTableName("TZ_ORGANIZATION_SITE");
-//      setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
-//      setFilter(new FilterDfn(null, "TZOrgSiteFilter", Arrays.asList("NAME", "SITE_NAME", "SITE_TYPE", "SITE_DESC", "SITE _ENABLE")));
-//      setTransformList(new ArrayList<Transform>() {{
-//        add(new Transform("SITE_TYPE", "cmsTrnsCl000000001"));
-//        add(new Transform("SITE_ENABLE", "cmsTrnsCl000000002"));
-//        add(new Transform("SITE_ISSUE", "cmsTrnsCl000000003"));
-//      }});
-//      setZBeList(new ArrayList<Be>() {{
-//        add(new Be() {{
-//          setBeName("TZSiteColu");
-//          setEntityClass(TzSiteColu.class);
-//          setTableName("TZ_SITE_COLU");
-//          setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
-//          setFilter(new FilterDfn(null, "TZSiteColuFilter", Arrays.asList("NAME", "COLU_TYPE", "COLU_ENABLE", "SITE_DESC", "SITE _ENABLE")));
-//          setTransformList(new ArrayList<Transform>() {{
-//            add(new Transform("SITE_TYPE", "cmsTrnsCl000000001"));
-//            add(new Transform("SITE_ENABLE", "cmsTrnsCl000000002"));
-//            add(new Transform("SITE_ISSUE", "cmsTrnsCl000000003"));
-//          }});
-//          setPromptList(new ArrayList<Prompt>() {{
-//            add(new Prompt(null, "classIdPrompt", "CLASS_ID", new Be() {{
-//              setBeName("TZClass");
-//              setEntityClass(TzClass.class);
-//              setTableName("TZ_CLASS");
-//            }}, "NAME", "ID", Arrays.asList("ID", "NAME")));
-//          }});
-//        }});
-//        add(new Be() {{
-//          setBeName("TZCourse");
-//          setEntityClass(TzCourseInst.class);
-//          setTableName("TZ_COURSE_INST");
-//          setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
-//        }});
-//      }});
-//    }});
-//  }};
 
   private List<Be> beList = new ArrayList<Be>() {{
     add(new Be() {{
@@ -241,6 +222,18 @@ public class MetadataModule {
       setEntityClass(TzSiteArt.class);
       setTableName("TZ_SITE_ART");
       setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
+      setFilter(new FilterDfn(null, "TZSiteArtFilter", Arrays.asList("ART_TITLE", "ART_SHORTTITLE", "ART_TYPE")));
+      setTransformList(new ArrayList<Transform>() {{
+        add(new Transform("ART_TYPE", "ART_TYPE"));
+        add(new Transform("ART_EDITTYPE", "ART_EDITTYPE"));
+      }});
+      setPromptList(new ArrayList<Prompt>() {{
+        add(new Prompt(null, "artAddTypeIdPrompt", "ART_ADD_TYPE_ID", new Be() {{
+          setBeName("TZArtAddType");
+          setEntityClass(TzArtAddType.class);
+          setTableName("TZ_ART_ADD_TYPE");
+        }}, "NAME", "ID", Arrays.asList("ID", "NAME", "COMMENTS")));
+      }});
     }});
     add(new Be() {{
       setBeName("TZSiteAddArt");
@@ -253,24 +246,48 @@ public class MetadataModule {
       setEntityClass(TzSiteArtImage.class);
       setTableName("TZ_SITE_ART_IMAGE");
       setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
+      setFilter(new FilterDfn(null, "TZSiteArtImageFilter", Arrays.asList("IMAGE_TYPE", "IMAGE_TITLE")));
+      setTransformList(new ArrayList<Transform>() {{
+        add(new Transform("IMAGE_TYPE", "ART_IMAGE_TYPE"));
+      }});
     }});
     add(new Be() {{
       setBeName("TZSiteArtFile");
       setEntityClass(TzSiteArtFile.class);
       setTableName("TZ_SITE_ART_FILE");
       setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
+      setFilter(new FilterDfn(null, "TZSiteArtFileFilter", Arrays.asList("ART_ID")));
     }});
     add(new Be() {{
       setBeName("TZColuArtGroup");
       setEntityClass(TzColuArtGroup.class);
       setTableName("TZ_COLU_ART_GROUP");
       setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
+      setFilter(new FilterDfn(null, "TZColuArtGroupFilter", Arrays.asList("COMMENTS")));
     }});
     add(new Be() {{
       setBeName("TZColuArt");
       setEntityClass(TzColuArt.class);
       setTableName("TZ_COLU_ART");
       setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
+      setFilter(new FilterDfn(null, "TZColuArtFilter", Arrays.asList("ART_PUB_STATE", "STATIC_FLAG", "COMMENTS")));
+      setTransformList(new ArrayList<Transform>() {{
+        add(new Transform("ART_PUB_STATE", "COLU_ART_PUB_STATE"));
+        add(new Transform("STATIC_FLAG", "COLU_ART_STATIC_FLAG"));
+        add(new Transform("PROJECT_LIMIT", "COLU_ART_PROJECT_LIMIT"));
+      }});
+      setPromptList(new ArrayList<Prompt>() {{
+        add(new Prompt(null, "userIdPrompt", "PUBLISHER", new Be() {{
+          setBeName("TZUser");
+          setEntityClass(TzUser.class);
+          setTableName("TZ_USER");
+        }}, "USERNAME", "ID", Arrays.asList("ID", "USERNAME", "TYPE", "SOURCE")));
+        add(new Prompt(null, "pubIdPrompt", "PUB_DEP", new Be() {{
+          setBeName("TZOrgBu");
+          setEntityClass(TzOrgBu.class);
+          setTableName("TZ_ORG_BU");
+        }}, "NAME", "ID", Arrays.asList("ID", "CODE", "NAME")));
+      }});
     }});
   }};
 
@@ -918,15 +935,15 @@ public class MetadataModule {
     TzField tzFieldCreated = new TzField(nextFieldId(), "Created", be.getBeId(), null, "CREATED", null, null, "DateTime", null, null, null, "Y", "N", "Y"
             , null, 1, admin, date, admin, date, "datetime", null, null);
     TzField tzFieldCreatedBy = new TzField(nextFieldId(), "CreatedBy", be.getBeId(), null, "CREATED_BY", null, null, "Varchar", 18, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "String", null, null);
+            , null, 1, admin, date, admin, date, "string", null, null);
 
     TzField tzFieldCreatedByName = new TzField(nextFieldId(), "CreatedByName", be.getBeId(), "ByName","USERNAME", null, null, "Varchar", 255, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "String", null, null);
+            , null, 1, admin, date, admin, date, "string", null, null);
 
     TzField tzFieldlastUpd = new TzField(nextFieldId(), "LastUpd", be.getBeId(), null, "LAST_UPD", null, null, "DateTime", null, null, null, "Y", "N", "Y"
             , null, 1, admin, date, admin, date, "datetime", null, null);
     TzField tzFieldlastUpdBy = new TzField(nextFieldId(), "LastUpdBy", be.getBeId(), null, "LAST_UPD_BY", null, null, "Varchar", 18, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "String", null, null);
+            , null, 1, admin, date, admin, date, "string", null, null);
 
     tzFieldMapper.insertSelective(tzFieldModificationNumber);
     tzFieldMapper.insertSelective(tzFieldCreated);

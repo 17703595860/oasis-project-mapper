@@ -1,15 +1,10 @@
-package com.study.AA_Utils;
+package com.study.教育基线.class_room;
 
 import com.study.entity.*;
 import com.study.mapper.*;
 import com.study.utils.ColumnMetaData;
 import com.study.utils.DatabaseUtil;
-import com.study.utils.medadata.FilterDfn;
-import com.study.utils.medadata.Be;
-import com.study.utils.medadata.Bm;
-import com.study.utils.medadata.Link;
-import com.study.utils.medadata.Prompt;
-import com.study.utils.medadata.Transform;
+import com.study.utils.medadata.*;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -96,31 +91,27 @@ public class MetadataModule {
   Date date = new Date();
   Integer idNum = 18;
 
-  // 最长10个，保持有空隙
-  private String module = "cms";
-  private String moduleDesc = "cms模块";
+  private String beIdPre = "roomBE000000";
+  private String fieldIdPre = "roomField000";
+  private String joinIdPre = "roomJoin0000";
+  private String joinSpecIdPre = "roomSpec0000";
 
-  private String beIdPre = module + "BE000";
-  private String fieldIdPre = module + "Field000";
-  private String joinIdPre = module + "Join000";
-  private String joinSpecIdPre = module + "Spec000";
+  private String bmIdPre = "roomBM000000";
+  private String bmBeIdPre = "roomBMBE0000";
+  private String linkIdPre = "roomLink0000";
 
-  private String bmIdPre = module + "BM000";      // -----------------------------------------
-  private String bmBeIdPre = module + "BMBE000";
-  private String linkIdPre = module + "Link000";
+  private String messageIdPre = "roomMsg00000";
+  private String messageInfIdPre = "roomMsgInf00";
 
-  private String messageIdPre = module + "Msg000";
-  private String messageInfIdPre = module + "MsgInf000";
+  private String permissionGroupIdPre = "roomPMGroup0";
+  private String permissionIdPre = "roomPM000000";
 
-  private String permissionGroupIdPre = module + "PMGroup000";  // -----------------------------------------
-  private String permissionIdPre = module + "PM000";
+  private String promptIdPre = "roomPT000000";
+  private String promptFieldIdPre = "roomPTFld000";
 
-  private String promptIdPre = module + "PMGroup000";
-  private String promptFieldIdPre = module + "PM000";
-
-  private String filterDfnIdPre = module + "Filter000";
-  private String filterFldIdPre = module + "FltFld000";
-  private String filterFldOperatorIdPre = module + "FldOpr000";
+  private String filterDfnIdPre = "roomFilter00";
+  private String filterFldIdPre = "roomsFltFld0";
+  private String filterFldOperatorIdPre = "roomFldOpr00";
 
   private Integer beIdA = 1;
   private Integer fieldIdA = 1;
@@ -171,56 +162,26 @@ public class MetadataModule {
   private String descFilePath = "D:/桌面/sql/";
   private boolean transactionCommit = false;
 
-  private Bm bm = new Bm(null, "TZStudent", "TZStudent", new HashMap<String, String>() {{
+  private String module = "room";
+  private String moduleDesc = "room模块";
+  private Bm bm = new Bm(null, "TZClassRoom", "TZClassRoom", new HashMap<String, String>() {{
     put("retrieve", "查看");
     put("create", "新增");
     put("update", "修改");
     put("delete", "删除");
-    put("deleteStudent", "自定义删除");
+    put("import", "导入");
+    put("export", "导出");
   }}, new ArrayList<Link>() {{
-    add(new Link("TZStudent/TZIdcard", "ID", "STUDENT_ID", new HashMap<String, String>() {{
-      put("retrieve", "查看");
-      put("create", "新增");
-      put("update", "修改");
-      put("delete", "删除");
-    }}));
-    add(new Link("TZStudent/TZCourse", "ID", "STUDENT_ID", new HashMap<String, String>() {{
-      put("retrieve", "查看");
-      put("create", "新增");
-      put("update", "修改");
-      put("delete", "删除");
-    }}));
   }});
   private List<Be> beList = new ArrayList<Be>() {{
     add(new Be() {{
-      setBeName("TZStudent");
-      setEntityClass(TzStudent.class);
-      setTableName("TZ_STUDENT");
+      setBeName("TZClassRoom");
+      setEntityClass(TzClassroom.class);
+      setTableName("TZ_CLASSROOM");
       setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
-      setFilter(new FilterDfn(null, "TZStudentFilter", Arrays.asList("CODE", "NAME", "SEX")));
+      setFilter(new FilterDfn(null, "TZClassRoomFilter", Arrays.asList("ADDR_NO", "ADDR_NAME", "ADDR_DESC", "AVAILABLE")));
       setTransformList(new ArrayList<Transform>() {{
-        add(new Transform("SEX", "STUDENT_SEX"));
-      }});
-      setPromptList(new ArrayList<Prompt>() {{
-        add(new Prompt(null, "classIdPrompt", "CLASS_ID", new Be() {{
-          setBeName("TZClass");
-          setEntityClass(TzClass.class);
-          setTableName("TZ_CLASS");
-        }}, "NAME", "ID", Arrays.asList("ID", "NAME")));
-      }});
-      setZBeList(new ArrayList<Be>() {{
-        add(new Be() {{
-          setBeName("TZIdcard");
-          setEntityClass(TzIdcard.class);
-          setTableName("TZ_IDCARD");
-          setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
-        }});
-        add(new Be() {{
-          setBeName("TZCourse");
-          setEntityClass(TzCourseInst.class);
-          setTableName("TZ_COURSE_INST");
-          setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
-        }});
+        add(new Transform("AVAILABLE", "AVAILABLE"));
       }});
     }});
   }};
@@ -670,7 +631,7 @@ public class MetadataModule {
     Map<String, String> permission = bm.getPermission();
     for (Map.Entry<String, String> entry : permission.entrySet()) {
       TzPermission tzPermission = new TzPermission(nextPermissionId(), tzPermissionGroup.getId(), bm.getBmName() + ":" + bm.getPriBeName() + ":" + entry.getValue(), bm.getBmName() + ":" + bm.getPriBeName() + ":" + entry.getKey()
-              , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
+          , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
       tzPermissionMapper.insertSelective(tzPermission);
     }
     permissionIdA += 20;
@@ -678,7 +639,7 @@ public class MetadataModule {
       for (Link link : bm.getLinkList()) {
         for (Map.Entry<String, String> entry : link.getPermission().entrySet()) {
           TzPermission tzPermission = new TzPermission(nextPermissionId(), tzPermissionGroup.getId(), bm.getBmName() + ":" + link.getName().split("/")[0] + ":" + link.getName().split("/")[1] + ":" + entry.getValue(), bm.getBmName() + ":" + link.getName().split("/")[0] + ":" + link.getName().split("/")[1] + ":" + entry.getKey()
-                  , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
+              , entry.getKey(), (byte) 0, 1, "", admin, date, admin, date);
           tzPermissionMapper.insertSelective(tzPermission);
         }
         permissionIdA += 20;
@@ -697,12 +658,6 @@ public class MetadataModule {
       TzBusentity tzBusentity = tzBusentityMapper.selectByPrimaryKey(be.getBeId());
       tzBusentity.setMsgCollectionId(tzMessageCollection.getId());
       tzBusentityMapper.updateByPrimaryKeySelective(tzBusentity);
-
-      // be消息集合
-      TzMessageInfo tzMessageInfo11 = new TzMessageInfo(nextMessageInfId(), tzMessageCollection.getId(), "ZHS", be.getBeName(), be.getBeName() + "." + be.getBeName(), databaseUtil.getTableComment(be.getTableName()), "Y", 1, admin, date, admin, date);
-      TzMessageInfo tzMessageInfo22 = new TzMessageInfo(nextMessageInfId(), tzMessageCollection.getId(), "ENG", be.getBeName(), be.getBeName() + "." + be.getBeName(), databaseUtil.getTableComment(be.getTableName()), "Y", 1, admin, date, admin, date);
-      tzMessageInfoMapper.insertSelective(tzMessageInfo11);
-      tzMessageInfoMapper.insertSelective(tzMessageInfo22);
 
       List<ColumnMetaData> colData = databaseUtil.getColData(be.getTableName());
       Map<String, ColumnMetaData> fieldColData = getFieldMapColData(be, colData);
@@ -798,7 +753,7 @@ public class MetadataModule {
         }
         String fieldName = getFieldName(coldata.getColName(), be);
         TzField tzField = new TzField(nextFieldId(), fieldName, be.getBeId(), null, coldata.getColName(), null, null, null, null, null, null, null, "N", "Y"
-                , null, 1, admin, date, admin, date, null, null, null);
+            , null, 1, admin, date, admin, date, null, null, null);
         String type = getColType(coldata);
         tzField.setDataType(type);
         tzField.setTextlen(coldata.getTextLen());
@@ -841,19 +796,19 @@ public class MetadataModule {
     tzJoinSpecMapper.insert(tzJoinSpec);
 
     TzField tzFieldModificationNumber = new TzField(nextFieldId(), "ModificationNumber", be.getBeId(), null, "MODIFICATION_NUM", null, null, "Number", null, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "string", null, null);
+        , null, 1, admin, date, admin, date, "string", null, null);
     TzField tzFieldCreated = new TzField(nextFieldId(), "Created", be.getBeId(), null, "CREATED", null, null, "DateTime", null, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "datetime", null, null);
+        , null, 1, admin, date, admin, date, "datetime", null, null);
     TzField tzFieldCreatedBy = new TzField(nextFieldId(), "CreatedBy", be.getBeId(), null, "CREATED_BY", null, null, "Varchar", 18, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "string", null, null);
+        , null, 1, admin, date, admin, date, "string", null, null);
 
     TzField tzFieldCreatedByName = new TzField(nextFieldId(), "CreatedByName", be.getBeId(), "ByName","USERNAME", null, null, "Varchar", 255, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "string", null, null);
+        , null, 1, admin, date, admin, date, "string", null, null);
 
     TzField tzFieldlastUpd = new TzField(nextFieldId(), "LastUpd", be.getBeId(), null, "LAST_UPD", null, null, "DateTime", null, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "datetime", null, null);
+        , null, 1, admin, date, admin, date, "datetime", null, null);
     TzField tzFieldlastUpdBy = new TzField(nextFieldId(), "LastUpdBy", be.getBeId(), null, "LAST_UPD_BY", null, null, "Varchar", 18, null, null, "Y", "N", "Y"
-            , null, 1, admin, date, admin, date, "string", null, null);
+        , null, 1, admin, date, admin, date, "string", null, null);
 
     tzFieldMapper.insertSelective(tzFieldModificationNumber);
     tzFieldMapper.insertSelective(tzFieldCreated);

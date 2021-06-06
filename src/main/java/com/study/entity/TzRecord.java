@@ -9,36 +9,39 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
-* Created by Mybatis Generator 2021/06/04
+* Created by Mybatis Generator 2021/06/03
 */
-@Table(name = "TZ_ORGANIZATION")
+@Table(name = "TZ_RECORD")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TzOrganization {
+public class TzRecord {
+    /**
+     * 主键
+     */
     @Id
     @Column(name = "ID")
     private String id;
 
     /**
-     * 机构编号
+     * 学院
      */
-    @Column(name = "CODE")
-    private String code;
+    @Column(name = "ORG_ID")
+    private String orgId;
 
     /**
-     * 名称
+     * 学历名称
      */
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "RECORD_NAME")
+    private String recordName;
 
     /**
-     * 备注
+     * 是否学历教育,Y 是 N 否
      */
-    @Column(name = "COMMENTS")
-    private String comments;
+    @Column(name = "IS_RECORD_EDU")
+    private String isRecordEdu;
 
     /**
      * 修改记录号
@@ -59,13 +62,13 @@ public class TzOrganization {
     private Date created;
 
     /**
-     * 修改人
+     * 更新人
      */
     @Column(name = "LAST_UPD_BY")
     private String lastUpdBy;
 
     /**
-     * 修改时间
+     * 更新时间
      */
     @Column(name = "LAST_UPD")
     private Date lastUpd;

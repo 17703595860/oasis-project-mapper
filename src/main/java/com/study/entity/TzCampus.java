@@ -11,34 +11,37 @@ import lombok.ToString;
 /**
 * Created by Mybatis Generator 2021/06/04
 */
-@Table(name = "TZ_ORGANIZATION")
+@Table(name = "TZ_CAMPUS")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TzOrganization {
+public class TzCampus {
+    /**
+     * 主键
+     */
     @Id
     @Column(name = "ID")
     private String id;
 
     /**
-     * 机构编号
+     * 所属机构
      */
-    @Column(name = "CODE")
-    private String code;
+    @Column(name = "ORG_ID")
+    private String orgId;
 
     /**
-     * 名称
+     * 校区名称
      */
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "CAMPUS_NAME")
+    private String campusName;
 
     /**
-     * 备注
+     * 校区地址
      */
-    @Column(name = "COMMENTS")
-    private String comments;
+    @Column(name = "CAMPUS_ADDR")
+    private String campusAddr;
 
     /**
      * 修改记录号
@@ -59,13 +62,13 @@ public class TzOrganization {
     private Date created;
 
     /**
-     * 修改人
+     * 更新人
      */
     @Column(name = "LAST_UPD_BY")
     private String lastUpdBy;
 
     /**
-     * 修改时间
+     * 更新时间
      */
     @Column(name = "LAST_UPD")
     private Date lastUpd;

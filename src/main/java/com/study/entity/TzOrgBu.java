@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
-* Created by Mybatis Generator 2021/04/25
+* Created by Mybatis Generator 2021/06/04
 */
 @Table(name = "TZ_ORG_BU")
 @Getter
@@ -81,4 +81,10 @@ public class TzOrgBu {
      */
     @Column(name = "LAST_UPD")
     private Date lastUpd;
+
+    /**
+     * 类型，1系所中心，2其他
+     */
+    @Column(name = "TYPE")
+    private String type;
 }

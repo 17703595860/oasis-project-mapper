@@ -1,15 +1,10 @@
-package com.study.AA_Utils;
+package com.study.教育基线.acad;
 
 import com.study.entity.*;
 import com.study.mapper.*;
 import com.study.utils.ColumnMetaData;
 import com.study.utils.DatabaseUtil;
-import com.study.utils.medadata.FilterDfn;
-import com.study.utils.medadata.Be;
-import com.study.utils.medadata.Bm;
-import com.study.utils.medadata.Link;
-import com.study.utils.medadata.Prompt;
-import com.study.utils.medadata.Transform;
+import com.study.utils.medadata.*;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -97,22 +92,22 @@ public class MetadataModule {
   Integer idNum = 18;
 
   // 最长10个，保持有空隙
-  private String module = "cms";
-  private String moduleDesc = "cms模块";
+  private String module = "acad";
+  private String moduleDesc = "acad学院模块";
 
   private String beIdPre = module + "BE000";
   private String fieldIdPre = module + "Field000";
   private String joinIdPre = module + "Join000";
   private String joinSpecIdPre = module + "Spec000";
 
-  private String bmIdPre = module + "BM000";      // -----------------------------------------
+  private String bmIdPre = module + "BM000";
   private String bmBeIdPre = module + "BMBE000";
   private String linkIdPre = module + "Link000";
 
   private String messageIdPre = module + "Msg000";
   private String messageInfIdPre = module + "MsgInf000";
 
-  private String permissionGroupIdPre = module + "PMGroup000";  // -----------------------------------------
+  private String permissionGroupIdPre = module + "PMGroup000";
   private String permissionIdPre = module + "PM000";
 
   private String promptIdPre = module + "PMGroup000";
@@ -171,20 +166,13 @@ public class MetadataModule {
   private String descFilePath = "D:/桌面/sql/";
   private boolean transactionCommit = false;
 
-  private Bm bm = new Bm(null, "TZStudent", "TZStudent", new HashMap<String, String>() {{
+  private Bm bm = new Bm(null, "TZOrg", "TZOrg", new HashMap<String, String>() {{
     put("retrieve", "查看");
     put("create", "新增");
     put("update", "修改");
     put("delete", "删除");
-    put("deleteStudent", "自定义删除");
   }}, new ArrayList<Link>() {{
-    add(new Link("TZStudent/TZIdcard", "ID", "STUDENT_ID", new HashMap<String, String>() {{
-      put("retrieve", "查看");
-      put("create", "新增");
-      put("update", "修改");
-      put("delete", "删除");
-    }}));
-    add(new Link("TZStudent/TZCourse", "ID", "STUDENT_ID", new HashMap<String, String>() {{
+    add(new Link("TZOrg/TZCampus", "ID", "ORG_ID", new HashMap<String, String>() {{
       put("retrieve", "查看");
       put("create", "新增");
       put("update", "修改");
@@ -192,37 +180,20 @@ public class MetadataModule {
     }}));
   }});
   private List<Be> beList = new ArrayList<Be>() {{
+//    add(new Be() {{
+//      setBeName("TZOrg");
+//      setEntityClass(TzOrganization.class);
+//      setTableName("TZ_ORGANIZATION");
+//      setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
+//      setFilter(new FilterDfn(null, "TZOrgFilter", Arrays.asList("CODE", "NAME", "Comments")));
+//    }});
     add(new Be() {{
-      setBeName("TZStudent");
-      setEntityClass(TzStudent.class);
-      setTableName("TZ_STUDENT");
-      setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
-      setFilter(new FilterDfn(null, "TZStudentFilter", Arrays.asList("CODE", "NAME", "SEX")));
-      setTransformList(new ArrayList<Transform>() {{
-        add(new Transform("SEX", "STUDENT_SEX"));
+        setBeName("TZCampus");
+        setEntityClass(TzCampus.class);
+        setTableName("TZ_CAMPUS");
+        setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
+        setFilter(new FilterDfn(null, "TZCampusFilter", Arrays.asList("CAMPUS_NAME", "CAMPUS_ADDR")));
       }});
-      setPromptList(new ArrayList<Prompt>() {{
-        add(new Prompt(null, "classIdPrompt", "CLASS_ID", new Be() {{
-          setBeName("TZClass");
-          setEntityClass(TzClass.class);
-          setTableName("TZ_CLASS");
-        }}, "NAME", "ID", Arrays.asList("ID", "NAME")));
-      }});
-      setZBeList(new ArrayList<Be>() {{
-        add(new Be() {{
-          setBeName("TZIdcard");
-          setEntityClass(TzIdcard.class);
-          setTableName("TZ_IDCARD");
-          setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
-        }});
-        add(new Be() {{
-          setBeName("TZCourse");
-          setEntityClass(TzCourseInst.class);
-          setTableName("TZ_COURSE_INST");
-          setClassName("cn.com.tranzvision.oasis.basebizobj.BCEntity.TZBCEntityBase");
-        }});
-      }});
-    }});
   }};
 
 
@@ -247,11 +218,11 @@ public class MetadataModule {
 
       addFieldJoin(beList);
 
-      addBm();
+//      addBm();
 
       addMessage();
 
-      addPermission();
+//      addPermission();
 
       addPrompt();
 

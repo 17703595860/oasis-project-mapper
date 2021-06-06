@@ -9,36 +9,45 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
-* Created by Mybatis Generator 2021/06/04
+* Created by Mybatis Generator 2021/06/03
 */
-@Table(name = "TZ_ORGANIZATION")
+@Table(name = "TZ_CLASSROOM")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TzOrganization {
+public class TzClassroom {
+    /**
+     * 主键
+     */
     @Id
     @Column(name = "ID")
     private String id;
 
     /**
-     * 机构编号
+     * 教室序号
      */
-    @Column(name = "CODE")
-    private String code;
+    @Column(name = "ADDR_NO")
+    private String addrNo;
 
     /**
-     * 名称
+     * 教室名称
      */
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "ADDR_NAME")
+    private String addrName;
 
     /**
-     * 备注
+     * 座位图编号
      */
-    @Column(name = "COMMENTS")
-    private String comments;
+    @Column(name = "SEAT_MAP_ID")
+    private String seatMapId;
+
+    /**
+     * 是否启用，Y启用，N不启用
+     */
+    @Column(name = "AVAILABLE")
+    private String available;
 
     /**
      * 修改记录号
@@ -59,14 +68,20 @@ public class TzOrganization {
     private Date created;
 
     /**
-     * 修改人
+     * 更新人
      */
     @Column(name = "LAST_UPD_BY")
     private String lastUpdBy;
 
     /**
-     * 修改时间
+     * 更新时间
      */
     @Column(name = "LAST_UPD")
     private Date lastUpd;
+
+    /**
+     * 备注
+     */
+    @Column(name = "ADDR_DESC")
+    private String addrDesc;
 }

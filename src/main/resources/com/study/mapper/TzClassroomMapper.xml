@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.study.mapper.TzOrgBuMapper">
-  <resultMap id="BaseResultMap" type="com.study.entity.TzOrgBu">
+<mapper namespace="com.study.mapper.TzClassroomMapper">
+  <resultMap id="BaseResultMap" type="com.study.entity.TzClassroom">
     <!--
       WARNING - @mbg.generated
     -->
     <id column="ID" jdbcType="VARCHAR" property="id" />
-    <result column="ORG_ID" jdbcType="VARCHAR" property="orgId" />
-    <result column="CODE" jdbcType="VARCHAR" property="code" />
-    <result column="NAME" jdbcType="VARCHAR" property="name" />
-    <result column="PAR_BUID" jdbcType="VARCHAR" property="parBuid" />
-    <result column="COMMENTS" jdbcType="VARCHAR" property="comments" />
+    <result column="ADDR_NO" jdbcType="VARCHAR" property="addrNo" />
+    <result column="ADDR_NAME" jdbcType="VARCHAR" property="addrName" />
+    <result column="SEAT_MAP_ID" jdbcType="VARCHAR" property="seatMapId" />
+    <result column="AVAILABLE" jdbcType="CHAR" property="available" />
     <result column="MODIFICATION_NUM" jdbcType="INTEGER" property="modificationNum" />
     <result column="CREATED_BY" jdbcType="VARCHAR" property="createdBy" />
     <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
     <result column="LAST_UPD_BY" jdbcType="VARCHAR" property="lastUpdBy" />
     <result column="LAST_UPD" jdbcType="TIMESTAMP" property="lastUpd" />
-    <result column="TYPE" jdbcType="CHAR" property="type" />
+    <result column="ADDR_DESC" jdbcType="LONGVARCHAR" property="addrDesc" />
   </resultMap>
 </mapper>
